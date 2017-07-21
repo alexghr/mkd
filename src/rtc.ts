@@ -22,15 +22,10 @@ export function publish() {
     console.log('channel closed');
   };
 
-  const candidates: Array<string> = [];
   let session: string;
 
   localConn.onicecandidate = (evt) => {
     console.log('pub local conn got ice candidate', evt.candidate);
-    if (evt.candidate === null) {
-      return;
-    }
-    candidates.push(JSON.stringify(evt.candidate));
   }
 
   localConn.createOffer().then((arg) => {
@@ -42,13 +37,10 @@ export function publish() {
   sub.on('data', (evt: any) => {
     console.log('got local message', evt);
     if (evt.remote) {
-      hub.broadcast(slug, {session});
-      hub.broadcast(slug, {candidates});
+      hub.broadcast(slug, {session: JSON.stringify(localConn.localDescription)});
     } else if (evt.remoteSession) {
       console.log('got remote description', evt);
       localConn.setRemoteDescription(new RTCSessionDescription(JSON.parse(evt.remoteSession)));
-    } else if (evt.remoteCandidate) {
-      localConn.addIceCandidate(new RTCIceCandidate(JSON.parse(evt.remoteCandidate)));
     }
   });
 
@@ -61,13 +53,10 @@ export function publish() {
   };
 }
 
-
 export function subscribe(callback: Function) {
   const slug = window.location.pathname.slice(1);
   const remoteConn = new RTCPeerConnection({});
   global['remoteConn'] = remoteConn;
-
-  // let channel: RTCDataChannel;
 
   remoteConn.ondatachannel = (evt) => {
     console.log('on data channel', evt.channel);
@@ -79,11 +68,7 @@ export function subscribe(callback: Function) {
   };
 
   remoteConn.onicecandidate = (evt) => {
-    if (evt.candidate) {
-      hub.broadcast(slug, {
-        remoteCandidate: JSON.stringify(evt.candidate)
-      });
-    }
+    console.log('remote ice candidate', evt);
   }
 
   hub.subscribe(slug).on('data', (evt: object) => {
@@ -94,13 +79,7 @@ export function subscribe(callback: Function) {
         .then(() => remoteConn.createAnswer())
         .then((ses) => {
           remoteConn.setLocalDescription(ses)
-          hub.broadcast(slug, { remoteSession: JSON.stringify(ses) });
         });
-    } else if (evt['candidates']) {
-      console.log('setting candidates');
-      evt['candidates'].forEach((c: any) => {
-        remoteConn.addIceCandidate(new RTCIceCandidate(JSON.parse(c)));
-      });
     }
   });
 
