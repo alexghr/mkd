@@ -1,14 +1,16 @@
 declare module 'signalhub' {
-  type SignalHub = {
-    subscribe: (channel: string) => {on: Function};
-    broadcast: (channel: string, data: any, cb?: Function) => void;
-    close: (cb?: Function) => void;
-  };
 
-  type SignalHubCtor = (name: string, hubs: Array<string>) => SignalHub;
+  function signalhub(name: string, hubs: Array<string>): signalhub.SignalHub;
 
-  const fn: SignalHubCtor;
-  export = fn;
+  namespace signalhub {
+    interface SignalHub {
+      subscribe(channel: string): {on: Function, off: Function};
+      broadcast(channel: string, data: any, cb?: Function): void;
+      close(cb?: Function): void;
+    }
+  }
+
+  export = signalhub;
 }
 
 declare interface RTCPeerConnection {

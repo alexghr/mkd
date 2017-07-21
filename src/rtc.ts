@@ -12,8 +12,6 @@ export function publish() {
   const localConn = new RTCPeerConnection(peerConnOpts);
   const publishChannel = localConn.createDataChannel(slug, {  });
 
-  global['localConn'] = localConn;
-
   publishChannel.onopen = () => {
     console.log('channel open');
   };
@@ -56,7 +54,7 @@ export function publish() {
 export function subscribe(callback: Function) {
   const slug = window.location.pathname.slice(1);
   const remoteConn = new RTCPeerConnection({});
-  global['remoteConn'] = remoteConn;
+  // let channel: RTCDataChannel;
 
   remoteConn.ondatachannel = (evt) => {
     console.log('on data channel', evt.channel);

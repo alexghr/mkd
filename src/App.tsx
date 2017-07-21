@@ -1,34 +1,31 @@
 import * as React from 'react';
+import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux'
+
+import { AppState } from './store/state';
+import { ShareAction } from './store/action';
+import { isMaster } from './store/selectors';
+
 import MkdEditor from './Mkd/Editor';
 import MkdViewer from './Mkd/Viewer';
 
-import * as hub from './rtc';
-
 import './App.css';
 
-class App extends React.Component<{}, State> {
+class App extends React.Component<Props, State> {
 
   onChangeBound = this.onChange.bind(this);
   onShareBound = this.onShare.bind(this);
+
   state: State = {
     text: '',
-    showShareBtn: true,
-    watchMode: false
+    showShareBtn: true
   };
 
   componentDidMount() {
-    if (hub.shouldWatch()) {
-      hub.subscribe((text: string) => {
-        this.setState({text});
-      });
-      this.setState({
-        watchMode: true
-      });
-    }
+    this.props.watch();
   }
 
   render() {
-    const { watchMode } = this.state;
+    const watchMode = this.props.isMaster === false;
 
     return (
       <div className="App">
@@ -66,25 +63,40 @@ class App extends React.Component<{}, State> {
   }
 
   onChange(text: string): void {
-    const { broadcast } = this.state;
     this.setState({text});
-    if (broadcast) {
-      broadcast(text);
-    }
   }
 
   onShare(): void {
-    const broadcast = hub.publish();
-    broadcast(this.state.text);
-    this.setState({ broadcast });
+    this.props.share();
   }
 }
 
 type State = {
   text: string,
   showShareBtn: boolean,
-  broadcast?: Function,
-  watchMode: boolean
+  broadcast?: Function
 };
 
-export default App;
+type Props = OwnProps & StateProps & DispatchProps;
+
+type OwnProps = {};
+
+type StateProps = {
+  isMaster: boolean
+};
+
+type DispatchProps = {
+  share: () => void,
+  watch: () => void
+};
+
+const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
+  isMaster: isMaster(state)
+});
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch) => ({
+  share: () => dispatch(ShareAction.share()),
+  watch: () => dispatch(ShareAction.watch())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
