@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux'
 
-import { AppState } from '../store/state';
-import { ShareAction } from '../store/action';
-import { isMaster } from '../store/selectors';
+import { AppState, Slug } from '../store/state';
+import { DocumentAction } from '../store/action';
+import { getText, getSlug } from '../store/selectors';
 
 import MkdEditor from '../Mkd/Editor';
 import MkdViewer from '../Mkd/Viewer';
@@ -12,12 +12,8 @@ class EditPage extends React.Component<Props, State> {
 
   onChangeBound = this.onChange.bind(this);
 
-  state: State = {
-    text: ''
-  };
-
   render() {
-    const { text } = this.state;
+    const { text } = this.props;
 
     return (
       <div className="edit-page">
@@ -32,33 +28,40 @@ class EditPage extends React.Component<Props, State> {
   }
 
   onChange(text: string): void {
-    this.setState({text});
+    if (typeof this.props.slug === 'string') {
+      this.props.setText(this.props.slug, text);
+    } else {
+      this.props.newDocument(text);
+    }
   }
 }
 
-type State = {
-  text: string
-};
+type State = {};
 
 type Props = OwnProps & StateProps & DispatchProps;
 
 type OwnProps = {};
 
 type StateProps = {
+  text: string,
+  slug: Slug | null
 };
 
 type DispatchProps = {
-  share: () => void,
-  watch: () => void
+  setText: (slug: string, text: string) => void,
+  newDocument: (text: string) => void
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
-  isMaster: isMaster(state)
+  text: getText(state),
+  slug: getSlug(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch) => ({
-  share: () => dispatch(ShareAction.share()),
-  watch: () => dispatch(ShareAction.watch())
+  setText: (slug: string, text: string) =>
+    dispatch(DocumentAction.updateDocument(slug, text)),
+
+  newDocument: (text: string) => dispatch(DocumentAction.newDocument(text)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPage);

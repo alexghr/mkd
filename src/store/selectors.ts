@@ -1,5 +1,11 @@
 import { Selector } from 'reselect';
-import { AppState } from './state';
+import { AppState, Slug } from './state';
 
-export const getSlug: Selector<AppState, AppState['slug']> = (state) => state.slug;
-export const isMaster: Selector<AppState, AppState['isMaster']> = (state) => state.isMaster;
+export const getSlug: Selector<AppState, Slug | null> =
+  (state) => state.document ? state.document.slug : null;
+
+export const getText: Selector<AppState, string> =
+  (state) => state.document ? state.document.text : '';
+
+export const getDocument: Selector<AppState, AppState['document']> =
+  (state) => state.document;

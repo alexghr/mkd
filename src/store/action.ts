@@ -1,74 +1,40 @@
 import { ActionCreator } from 'redux';
 import { Slug } from './state';
 
-export type Action = ShareActions | SlugActions | SessionActions;
+export type Action = DocumentActions | SessionActions;
 export default Action;
 
-export namespace ShareAction {
-  export const SHARE = 'share';
-  export const WATCH = 'watch';
-  export const SET_IS_MASTER = 'set_master';
+export namespace DocumentAction {
+  export const NewDocument = 'document.new'
+  export const UpdateDocument = 'document.update';
 
-  export type Share = {
-    type: typeof SHARE
-  }
-
-  export type Watch = {
-    type: typeof WATCH
-  }
-
-  export type SetIsMaster = {
-    type: typeof SET_IS_MASTER,
+  export type NewDocument = {
+    type: typeof NewDocument,
     payload: {
-      isMaster: boolean
-    }
-  }
-
-  export const share: ActionCreator<Share> = () => ({ type: SHARE });
-  export const watch: ActionCreator<Watch> = () => ({ type: WATCH });
-  export const setIsMaster: ActionCreator<SetIsMaster> = (isMaster: boolean) => ({
-    type: SET_IS_MASTER,
-    payload: { isMaster }
-  });
-}
-
-type ShareActions = ShareAction.Share | ShareAction.Watch | ShareAction.SetIsMaster;
-
-export namespace SlugAction {
-  export const CREATE_SLUG = 'slug.create';
-  export const SET_SLUG = 'slug.set';
-  export const RESTORE_SLUG = 'slug.restore';
-
-  export type CreateSlug = {
-    type: typeof CREATE_SLUG
-  };
-
-  export type RestoreSlug = {
-    type: typeof RESTORE_SLUG
-  };
-
-  export type SetSlug = {
-    type: typeof SET_SLUG,
-    payload: {
-      slug: Slug | null
+      text?: string
     }
   };
 
-  export const createSlug: ActionCreator<CreateSlug> = () => ({
-    type: CREATE_SLUG
+  export type UpdateDocument = {
+    type: typeof UpdateDocument,
+    payload: {
+      slug: Slug,
+      text: string
+    }
+  };
+
+  export const newDocument: ActionCreator<NewDocument> = (text: string) => ({
+    type: NewDocument,
+    payload: { text }
   });
 
-  export const restoreSlug: ActionCreator<RestoreSlug> = () => ({
-    type: RESTORE_SLUG
-  });
-
-  export const setSlug: ActionCreator<SetSlug> = (slug: Slug | null) => ({
-    type: SET_SLUG,
-    payload: { slug }
+  export const updateDocument: ActionCreator<UpdateDocument> = (slug: string, text: string) => ({
+    type: UpdateDocument,
+    payload: { slug, text }
   });
 }
 
-type SlugActions = SlugAction.CreateSlug | SlugAction.RestoreSlug | SlugAction.SetSlug;
+type DocumentActions = DocumentAction.NewDocument | DocumentAction.UpdateDocument;
 
 export namespace SessionAction {
   export const SEND_OFFER = 'ses.send_offer';

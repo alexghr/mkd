@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import slugReducer from './slug';
+import documentReducer from './document';
 
 const rootReducer = combineReducers({
-  slug: slugReducer
+  document: documentReducer
 });
 
 export default rootReducer;

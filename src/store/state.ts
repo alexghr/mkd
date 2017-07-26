@@ -1,13 +1,18 @@
 export type AppState = {
-  slug: Slug | null,
-  isMaster: boolean
+  document: Document | null,
+  documents: Array<Document>
 }
 
 export type Slug = string;
 
+export type Document = {
+  slug: Slug,
+  text: string
+};
+
 export const initialState: AppState = {
-  slug: null,
-  isMaster: true
+  documents: [],
+  document: null
 };
 
 export default AppState;
