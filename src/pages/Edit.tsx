@@ -11,12 +11,14 @@ import MkdViewer from '../Mkd/Viewer';
 class EditPage extends React.Component<Props, State> {
 
   onChangeBound = this.onChange.bind(this);
+  onShareBound = this.onShare.bind(this);
 
   render() {
     const { text } = this.props;
 
     return (
       <div className="edit-page">
+        <button onClick={this.onShareBound}>Share</button>
         <div>
           <MkdEditor text={text} onChange={this.onChangeBound}/>
         </div>
@@ -25,6 +27,10 @@ class EditPage extends React.Component<Props, State> {
         </div>
       </div>
     );
+  }
+
+  onShare() {
+    this.props.share();
   }
 
   onChange(text: string): void {
@@ -49,7 +55,8 @@ type StateProps = {
 
 type DispatchProps = {
   setText: (slug: string, text: string) => void,
-  newDocument: (text: string) => void
+  newDocument: (text: string) => void,
+  share: () => void,
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
@@ -62,6 +69,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatc
     dispatch(DocumentAction.updateDocument(slug, text)),
 
   newDocument: (text: string) => dispatch(DocumentAction.newDocument(text)),
+
+  share: () => dispatch({type: 'listen'}),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPage);

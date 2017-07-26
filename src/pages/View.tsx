@@ -1,45 +1,51 @@
 import * as React from 'react';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux'
 
-import { AppState } from '../store/state';
+import { AppState, Slug } from '../store/state';
+import { DocumentAction } from '../store/action';
+import { getText } from '../store/selectors';
 
 import MkdViewer from '../Mkd/Viewer';
 
 class ViewPage extends React.Component<Props, State> {
 
-  state: State = {
-    text: ''
-  };
+  componentDidMount() {
+    this.props.loadDocument(this.props.slug);
+  }
 
   render() {
-    const { text } = this.state;
+    const { text } = this.props;
 
     return (
-      <div className="edit-page">
-        <MkdViewer text={text}/>
+      <div className="view-page">
+        {text ? <MkdViewer text={text}/> : 'Unknown document'}
       </div>
     );
   }
 }
 
-type State = {
-  text: string
-};
+type State = {};
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-type OwnProps = {};
+type OwnProps = {
+  slug: Slug
+};
 
 type StateProps = {
+  text: string
 };
 
 type DispatchProps = {
+  loadDocument: (slug: Slug) => void
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
+  text: getText(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch) => ({
+  loadDocument: (slug: Slug) => dispatch(DocumentAction.loadDocument(slug)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ViewPage);

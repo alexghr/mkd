@@ -7,6 +7,7 @@ export default Action;
 export namespace DocumentAction {
   export const NewDocument = 'document.new'
   export const UpdateDocument = 'document.update';
+  export const LoadDocument = 'document.restore';
 
   export type NewDocument = {
     type: typeof NewDocument,
@@ -23,6 +24,13 @@ export namespace DocumentAction {
     }
   };
 
+  export type LoadDocument = {
+    type: typeof LoadDocument,
+    payload: {
+      slug: Slug
+    }
+  }
+
   export const newDocument: ActionCreator<NewDocument> = (text: string) => ({
     type: NewDocument,
     payload: { text }
@@ -32,14 +40,18 @@ export namespace DocumentAction {
     type: UpdateDocument,
     payload: { slug, text }
   });
+
+  export const loadDocument: ActionCreator<LoadDocument> = (slug: Slug) => ({
+    type: LoadDocument,
+    payload: { slug }
+  });
 }
 
-type DocumentActions = DocumentAction.NewDocument | DocumentAction.UpdateDocument;
+type DocumentActions = DocumentAction.NewDocument | DocumentAction.UpdateDocument | DocumentAction.LoadDocument;
 
 export namespace SessionAction {
   export const SEND_OFFER = 'ses.send_offer';
   export const SEND_ANSWER = 'ses.send_answer';
-  export const SEND_ICE_CANDIDATE = 'ses.send_ice_candidate';
 
   export type SendOffer = {
     type: typeof SEND_OFFER
@@ -55,14 +67,6 @@ export namespace SessionAction {
     }
   }
 
-  export type SendIceCandidate = {
-    type: typeof SEND_ICE_CANDIDATE
-    payload: {
-      source: 'client' | 'master',
-      iceCandidate: RTCIceCandidate | Array<RTCIceCandidate>
-    }
-  }
-
   export const sendOffer: ActionCreator<SendOffer> =
     (sessionDescription: RTCSessionDescription) => ({
       type: SEND_OFFER,
@@ -74,16 +78,6 @@ export namespace SessionAction {
       type: SEND_ANSWER,
       payload: { sessionDescription }
     });
-
-
-  export const sendIceCandidate: ActionCreator<SendIceCandidate> =
-    (source: 'client' | 'master', iceCandidate: RTCIceCandidate | Array<RTCIceCandidate>) => ({
-      type: SEND_ICE_CANDIDATE,
-      payload: {
-        source,
-        iceCandidate
-      }
-    });
 }
 
-type SessionActions = SessionAction.SendOffer | SessionAction.SendAnswer | SessionAction.SendIceCandidate;
+type SessionActions = SessionAction.SendOffer | SessionAction.SendAnswer;
