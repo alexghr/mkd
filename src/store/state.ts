@@ -1,17 +1,21 @@
 export type AppState = {
-  document: Document | null,
-  documents: Array<Document>
-}
+  document: Document | null
+};
 
 export type Slug = string;
 
 export type Document = {
   slug: Slug,
-  text: string
+  text: string,
+  shared?: boolean
+};
+
+export type Peer = {
+  rtcPeerConnection: RTCPeerConnection,
+  rtcDataChannel: RTCDataChannel
 };
 
 export const initialState: AppState = {
-  documents: [],
   document: null
 };
 

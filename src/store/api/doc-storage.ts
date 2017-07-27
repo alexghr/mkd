@@ -1,14 +1,21 @@
 import { Document, Slug } from '../state';
 
-type Docs = Record<Slug, Document>
+type Docs = Record<Slug, Document>;
 
-export function storeDocument(document: Document) {
-  const docs = {
-    ...getDocs(),
-    [document.slug]: document
-  };
+export function storeDocument(document: Partial<Document>) {
+  if (!document.slug) {
+    throw new Error();
+  }
 
-  storeDocs(docs);
+  const docs = getDocs();
+
+  storeDocs({
+    ...docs,
+    [document.slug]: {
+      ...docs[document.slug],
+      ...document
+    }
+  });
 }
 
 export function restoreDocument(slug: Slug): Document {

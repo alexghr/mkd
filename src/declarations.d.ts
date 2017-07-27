@@ -4,7 +4,7 @@ declare module 'signalhub' {
 
   namespace signalhub {
     interface SignalHub {
-      subscribe(channel: string): {on: Function, off: Function};
+      subscribe(channel: string): {addListener: Function, removeListener: Function};
       broadcast(channel: string, data: any, cb?: Function): void;
       close(cb?: Function): void;
     }
@@ -44,7 +44,7 @@ declare class RTCDataChannel extends EventTarget {
 
   onopen: (this: RTCDataChannel) => any;
   onerror: (this: RTCDataChannel, evt: ErrorEvent) => any;
-  onmessage: (this: RTCDataChannel, evt: MessageEvent) => any;
+  onmessage?: (this: RTCDataChannel, evt: MessageEvent) => any;
   onclose: (this: RTCDataChannel) => any;
 
   send(arg: USVString | Blob | ArrayBuffer | ArrayBufferView): void;

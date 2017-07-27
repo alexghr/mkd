@@ -1,11 +1,11 @@
-import { Effect, call } from 'redux-saga/effects';
+import { Effect, call, all } from 'redux-saga/effects';
 
-import sessionSaga from './session';
+import rtcSaga from './rtc';
 import documentSaga from './document';
 
-export default function* rootSaga(): Iterator<Array<Effect>> {
-  yield [
-    call(sessionSaga),
+export default function* rootSaga(): Iterator<Effect> {
+  yield all([
+    call(rtcSaga),
     call(documentSaga),
-  ];
+  ]);
 }

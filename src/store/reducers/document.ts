@@ -7,10 +7,20 @@ const documentReducer: Reducer<AppState['document']> =
 (state = initialState.document, action: Action) => {
   switch (action.type) {
 
-    case DocumentAction.UpdateDocument:
+    case DocumentAction.ShareDocument:
       return {
         slug: action.payload.slug,
-        text: action.payload.text
+        text: '',
+        ...state,
+        shared: true
+      };
+
+    case DocumentAction.UpdateDocument:
+      return {
+        shared: false,
+        ...state,
+        slug: action.payload.slug,
+        text: action.payload.text,
       };
 
     default:

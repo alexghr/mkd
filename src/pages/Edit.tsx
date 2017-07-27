@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux'
+import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 
-import { AppState, Slug } from '../store/state';
+import { AppState, Slug, Document } from '../store/state';
 import { DocumentAction } from '../store/action';
-import { getText, getSlug } from '../store/selectors';
+import {  getDocument } from '../store/selectors';
 
 import MkdEditor from '../Mkd/Editor';
 import MkdViewer from '../Mkd/Viewer';
@@ -13,12 +13,19 @@ class EditPage extends React.Component<Props, State> {
   onChangeBound = this.onChange.bind(this);
   onShareBound = this.onShare.bind(this);
 
+  componentDidMount() {
+    this.props.loadDocument();
+  }
+
   render() {
-    const { text } = this.props;
+    const { document, slug } = this.props;
+    const text = document ? document.text : '';
+    const shared = document ? document.shared : false;
 
     return (
       <div className="edit-page">
-        <button onClick={this.onShareBound}>Share</button>
+        <h1>{slug}</h1>
+        {shared ? null : <button onClick={this.onShareBound}>Share</button>}
         <div>
           <MkdEditor text={text} onChange={this.onChangeBound}/>
         </div>
@@ -34,11 +41,7 @@ class EditPage extends React.Component<Props, State> {
   }
 
   onChange(text: string): void {
-    if (typeof this.props.slug === 'string') {
-      this.props.setText(this.props.slug, text);
-    } else {
-      this.props.newDocument(text);
-    }
+    this.props.setText(text);
   }
 }
 
@@ -46,31 +49,32 @@ type State = {};
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-type OwnProps = {};
+type OwnProps = {
+  slug: Slug
+};
 
 type StateProps = {
-  text: string,
-  slug: Slug | null
+  document: Document | null
 };
 
 type DispatchProps = {
-  setText: (slug: string, text: string) => void,
-  newDocument: (text: string) => void,
+  loadDocument: () => void,
+  setText: (text: string) => void,
   share: () => void,
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
-  text: getText(state),
-  slug: getSlug(state)
+  document: getDocument(state)
 });
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch) => ({
-  setText: (slug: string, text: string) =>
-    dispatch(DocumentAction.updateDocument(slug, text)),
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch, props) => ({
+  loadDocument: () => props ? dispatch(DocumentAction.loadDocument(props.slug)) : null,
 
-  newDocument: (text: string) => dispatch(DocumentAction.newDocument(text)),
+  setText: (text: string) => props
+    ? dispatch(DocumentAction.updateDocument(props.slug, text))
+    : null,
 
-  share: () => dispatch({type: 'listen'}),
+  share: () => props ? dispatch(DocumentAction.shareDocument(props.slug)) : null,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPage);

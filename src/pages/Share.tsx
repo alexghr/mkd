@@ -2,22 +2,22 @@ import * as React from 'react';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 
 import { AppState, Slug } from '../store/state';
-import { DocumentAction } from '../store/action';
+import { ClientAction } from '../store/action';
 import { getText } from '../store/selectors';
 
 import MkdViewer from '../Mkd/Viewer';
 
-class ViewPage extends React.Component<Props, State> {
+class SharePage extends React.Component<Props, State> {
 
   componentDidMount() {
-    this.props.loadDocument(this.props.slug);
+    this.props.announce();
   }
 
   render() {
     const { text } = this.props;
 
     return (
-      <div className="view-page">
+      <div className="share-page">
         {text ? <MkdViewer text={text}/> : 'Unknown document ' + this.props.slug}
       </div>
     );
@@ -37,15 +37,15 @@ type StateProps = {
 };
 
 type DispatchProps = {
-  loadDocument: (slug: Slug) => void
+  announce: () => void
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
   text: getText(state)
 });
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch) => ({
-  loadDocument: (slug: Slug) => dispatch(DocumentAction.loadDocument(slug))
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch, props) => ({
+  announce: () => props ? dispatch(ClientAction.initServerConnection(props.slug)) : null,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SharePage);

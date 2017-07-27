@@ -1,13 +1,14 @@
 import { ActionCreator } from 'redux';
 import { Slug } from './state';
 
-export type Action = DocumentActions | SessionActions;
+export type Action = DocumentActions | ServerActions | ClientActions;
 export default Action;
 
 export namespace DocumentAction {
-  export const NewDocument = 'document.new'
+  export const NewDocument = 'document.new';
   export const UpdateDocument = 'document.update';
   export const LoadDocument = 'document.restore';
+  export const ShareDocument = 'document.share';
 
   export type NewDocument = {
     type: typeof NewDocument,
@@ -29,7 +30,14 @@ export namespace DocumentAction {
     payload: {
       slug: Slug
     }
-  }
+  };
+
+  export type ShareDocument = {
+    type: typeof ShareDocument,
+    payload: {
+      slug: Slug
+    }
+  };
 
   export const newDocument: ActionCreator<NewDocument> = (text: string) => ({
     type: NewDocument,
@@ -45,39 +53,50 @@ export namespace DocumentAction {
     type: LoadDocument,
     payload: { slug }
   });
+
+  export const shareDocument: ActionCreator<ShareDocument> = (slug: Slug) => ({
+    type: ShareDocument,
+    payload: { slug }
+  });
 }
 
-type DocumentActions = DocumentAction.NewDocument | DocumentAction.UpdateDocument | DocumentAction.LoadDocument;
+type DocumentActions = DocumentAction.NewDocument
+  | DocumentAction.UpdateDocument
+  | DocumentAction.LoadDocument
+  | DocumentAction.ShareDocument;
 
-export namespace SessionAction {
-  export const SEND_OFFER = 'ses.send_offer';
-  export const SEND_ANSWER = 'ses.send_answer';
+export namespace ServerAction {
+  export const ListenForClients = 'ses.server.listenForClients';
 
-  export type SendOffer = {
-    type: typeof SEND_OFFER
+  export type ListenForClients = {
+    type: typeof ListenForClients,
     payload: {
-      sessionDescription: RTCSessionDescription
+      slug: Slug
     }
-  }
+  };
 
-  export type SendAnswer = {
-    type: typeof SEND_ANSWER
-    payload: {
-      sessionDescription: RTCSessionDescription
-    }
-  }
-
-  export const sendOffer: ActionCreator<SendOffer> =
-    (sessionDescription: RTCSessionDescription) => ({
-      type: SEND_OFFER,
-      payload: { sessionDescription }
-    });
-
-  export const sendAnswer: ActionCreator<SendAnswer> =
-    (sessionDescription: RTCSessionDescription) => ({
-      type: SEND_ANSWER,
-      payload: { sessionDescription }
-    });
+  export const listenForClients: ActionCreator<ListenForClients> = (slug: Slug) => ({
+    type: ListenForClients,
+    payload: { slug }
+  });
 }
 
-type SessionActions = SessionAction.SendOffer | SessionAction.SendAnswer;
+type ServerActions = ServerAction.ListenForClients;
+
+export namespace ClientAction {
+  export const InitServerConnection = 'ses.client.initiateConnection';
+
+  export type InitServerConnection = {
+    type: typeof InitServerConnection,
+    payload: {
+      slug: Slug
+    }
+  };
+
+  export const initServerConnection: ActionCreator<InitServerConnection> = (slug: Slug) => ({
+    type: InitServerConnection,
+    payload: { slug }
+  });
+}
+
+type ClientActions = ClientAction.InitServerConnection;
