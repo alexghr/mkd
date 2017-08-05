@@ -1,0 +1,21 @@
+image: node:latest
+
+stages:
+  - build
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  script:
+    - npm install --production=false
+    - npm run build
+    - rm build/static/js/*.map
+  variables:
+    NODE_ENV: production
+  artifacts:
+    paths:
+      - build/
+    expire_in: 10 minutes
