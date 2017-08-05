@@ -7,9 +7,10 @@ cache:
   paths:
     - node_modules/
 
-build:
+build-web:
   stage: build
   script:
+    - cd packages/web
     - npm install --production=false
     - npm run build
     - rm build/static/js/*.map
