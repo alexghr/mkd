@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.4",
-    "@types/react": "^15.0.33",
-    "@types/react-dom": "^15.5.1",
     "marked": "^0.3.6",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -17,7 +13,6 @@
     "redux-saga": "^0.15.4",
     "reselect": "^3.0.1",
     "signalhub": "^4.8.0",
-    "ssb-keys": "^7.0.9",
     "typescript": "^2.3.4"
   },
   "devDependencies": {
@@ -25,6 +20,10 @@
     "@types/react-redux": "^4.4.46",
     "@types/react-router-dom": "^4.0.7",
     "@types/redux-logger": "^3.0.0",
+    "@types/jest": "^20.0.2",
+    "@types/node": "^8.0.4",
+    "@types/react": "^15.0.33",
+    "@types/react-dom": "^15.5.1",
     "react-scripts-ts": "2.3.2"
   },
   "scripts": {
