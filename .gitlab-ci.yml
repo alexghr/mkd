@@ -5,7 +5,8 @@ stages:
 
 cache:
   paths:
-    - node_modules/
+    - packages/signal/node_modules/
+    - packages/web/node_modules/
 
 build-web:
   stage: build
@@ -16,7 +17,23 @@ build-web:
     - rm build/static/js/*.map
   variables:
     NODE_ENV: production
+    REACT_APP_CONFIG_URL: /config.json
   artifacts:
     paths:
-      - build/
+      - packages/web/build/
+    expire_in: 10 minutes
+
+build-signal:
+  stage: build
+  script:
+    - cd packages/signal
+    - npm install --production=false
+    - npm run build
+  variables:
+    NODE_ENV: production
+  artifacts:
+    paths:
+      - packages/signal/lib/
+      - packages/signal/package.json
+      - packages/signal/package-lock.json
     expire_in: 10 minutes

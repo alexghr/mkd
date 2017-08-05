@@ -1,10 +1,11 @@
-import { Effect, takeEvery, put, call, join, fork, all } from 'redux-saga/effects';
+import { Effect, takeEvery, put, call, join, fork, all, select } from 'redux-saga/effects';
 import { Channel, eventChannel, END } from 'redux-saga';
 
-import { Slug } from '../../state';
+import { Slug, Config } from '../../state';
+import { getConfig } from '../../selectors';
 import { ClientAction, DocumentAction } from '../../action';
 
-import * as signalhubApi from '../../api/signal';
+import Signal from '../../api/signal';
 import * as rtcApi from '../../api/rtc';
 import { randomString } from '../../util';
 
@@ -23,24 +24,28 @@ export default function* clientSaga(): Iterator<Effect> {
 function* initiateConnection(action: ClientAction.InitServerConnection): Iterator<Effect> {
   const { slug } = action.payload;
   const clientId = yield call(randomString);
+  const config: Config = yield select(getConfig);
+  const signal = yield call(() => new Signal(config.signalUrl));
 
-  const channel = yield call(createRtcOfferChannel, slug, clientId);
+  const channel = yield call(createRtcOfferChannel, signal, slug, clientId);
 
-  yield call(signalhubApi.broadcast, slug, {
+  yield call([signal, signal.broadcast], slug, {
     type: ClientSignalEvent,
     clientId: clientId
   });
 
-  yield takeEvery(channel, connectToServer, slug, clientId);
+  yield takeEvery(channel, connectToServer, signal, slug, clientId);
 }
 
-function* connectToServer(slug: Slug, clientId: ClientId, event: OfferSignalEvent): Iterator<Effect | Array<Effect>> {
+function* connectToServer(
+  signal: Signal, slug: Slug, clientId: ClientId, event: OfferSignalEvent
+): Iterator<Effect | Array<Effect>> {
   const rtcConn = yield call(rtcApi.createRTCConnection);
 
   const [answer, candidates] = yield call(rtcApi.makeAnswer, rtcConn, event.offer);
 
   const results = yield join(
-    yield fork(signalhubApi.broadcast, slug, {
+    yield fork([signal, signal.broadcast], slug, {
       type: AnswerSignalEvent,
       answer,
       candidates,
@@ -59,8 +64,8 @@ function* updateDocument(event: DocumentUpdateEvent): Iterator<Effect> {
   yield put(DocumentAction.updateDocument(event.document.slug, event.document.text));
 }
 
-function createRtcOfferChannel(slug: Slug, clientId: string): Channel<OfferSignalEvent> {
-  return eventChannel(emitter => signalhubApi.listenForMessages(slug, evt => {
+function createRtcOfferChannel(signal: Signal, slug: Slug, clientId: string): Channel<OfferSignalEvent> {
+  return eventChannel(emitter => signal.listenForMessages(slug, evt => {
     if (isOfferSignalEvent(evt) && evt.clientId === clientId) {
       emitter(evt);
       emitter(END);

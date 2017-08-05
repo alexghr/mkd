@@ -1,5 +1,6 @@
 export type AppState = {
-  document: Document | null
+  document: Document | null,
+  config: Config | null
 };
 
 export type Slug = string;
@@ -10,13 +11,13 @@ export type Document = {
   shared?: boolean
 };
 
-export type Peer = {
-  rtcPeerConnection: RTCPeerConnection,
-  rtcDataChannel: RTCDataChannel
+export type Config = {
+  signalUrl: string
 };
 
 export const initialState: AppState = {
-  document: null
+  document: null,
+  config: null
 };
 
 export default AppState;

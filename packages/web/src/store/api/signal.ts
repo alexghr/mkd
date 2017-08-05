@@ -1,27 +1,33 @@
 import * as signalhub from 'signalhub';
 import { Slug } from '../state';
 
-export function listenForMessages(slug: Slug, cb: (evt: object) => void) {
-  const stream = getHubConnection().subscribe(slug);
-  const eventHandler = (data: object) => {
-    cb(data);
-  };
+export default class Signal {
 
-  stream.addListener('data', eventHandler);
+  private _hubConn: signalhub.SignalHub | null = null;
 
-  return () => stream.removeListener('data', eventHandler);
-}
+  constructor(private signalUrl: string) {}
 
-export function broadcast(slug: Slug, message: object) {
-  const hub = getHubConnection();
-  hub.broadcast(slug, message);
-}
+  listenForMessages(slug: Slug, cb: (evt: object) => void) {
+    const stream = this.connection.subscribe(slug);
 
-let hubConn: signalhub.SignalHub;
-function getHubConnection() {
-  if (hubConn) {
-    return hubConn;
+    const eventHandler = (data: object) => {
+      cb(data);
+    };
+
+    stream.addListener('data', eventHandler);
+
+    return () => stream.removeListener('data', eventHandler);
   }
 
-  return hubConn = signalhub('mkd', ['localhost:8080']);
+  broadcast(slug: Slug, message: object) {
+    this.connection.broadcast(slug, message);
+  }
+
+  private get connection(): signalhub.SignalHub {
+    if (!this._hubConn) {
+      this._hubConn = signalhub('mkd', [this.signalUrl]);
+    }
+
+    return this._hubConn;
+  }
 }

@@ -1,8 +1,35 @@
 import { ActionCreator } from 'redux';
-import { Slug } from './state';
+import { Slug, Config } from './state';
 
-export type Action = DocumentActions | ServerActions | ClientActions;
+export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions;
 export default Action;
+
+export namespace ConfigAction {
+  export const LoadConfig = 'config.load';
+  export const SetConfig = 'config.set';
+
+  export type LoadConfig = {
+    type: typeof LoadConfig
+  };
+
+  export type SetConfig = {
+    type: typeof SetConfig,
+    payload: {
+      config: Config
+    }
+  };
+
+  export const loadConfig: ActionCreator<LoadConfig> = () => ({
+    type: LoadConfig
+  });
+
+  export const setConfig: ActionCreator<SetConfig> = (config: Config) => ({
+    type: SetConfig,
+    payload: { config }
+  });
+}
+
+type ConfigActions = ConfigAction.LoadConfig | ConfigAction.SetConfig;
 
 export namespace DocumentAction {
   export const NewDocument = 'document.new';

@@ -1,11 +1,11 @@
 import { Effect, takeEvery, take, call, all, cancel, join, fork, select } from 'redux-saga/effects';
 import { Channel, eventChannel, END } from 'redux-saga';
 
-import { Slug, Document } from '../../state';
+import { Slug, Document, Config } from '../../state';
 import { ServerAction, DocumentAction } from '../../action';
-import { getDocument } from '../../selectors';
+import { getDocument, getConfig } from '../../selectors';
 
-import * as signalhubApi from '../../api/signal';
+import Signal from '../../api/signal';
 import * as rtcApi from '../../api/rtc';
 
 import {
@@ -22,21 +22,24 @@ export default function* serverSaga(): Iterator<Effect> {
 
 function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effect> {
   const { slug } = action.payload;
-  const channel = yield call(createClientChannel, slug);
 
-  yield takeEvery(channel, connectToClient, slug);
+  const config: Config = yield select(getConfig);
+  const signal = yield call(() => new Signal(config.signalUrl));
+  const channel = yield call(createClientChannel, signal, slug);
+
+  yield takeEvery(channel, connectToClient, signal, slug);
 }
 
-function* connectToClient(slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
+function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
   const { clientId } = evt;
   const rtcConn = yield call(rtcApi.createRTCConnection);
   const dataChannel = yield call([rtcConn, rtcConn.createDataChannel], slug, {});
 
-  const answerChannel = yield call(createRtcAnswerChannel, slug, clientId);
+  const answerChannel = yield call(createRtcAnswerChannel, signal, slug, clientId);
 
   const [offer, candidates] = yield call(rtcApi.makeOffer, rtcConn);
 
-  yield call(signalhubApi.broadcast, slug, {
+  yield call([signal, signal.broadcast], slug, {
       offer,
       candidates,
       clientId,
@@ -79,16 +82,16 @@ function* updateClient(
   }
 }
 
-function createClientChannel(slug: Slug): Channel<ClientSignalEvent> {
-  return eventChannel(emitter => signalhubApi.listenForMessages(slug, evt => {
+function createClientChannel(signal: Signal, slug: Slug): Channel<ClientSignalEvent> {
+  return eventChannel(emitter => signal.listenForMessages(slug, evt => {
     if (isClientSignalEvent(evt)) {
       emitter(evt);
     }
   }));
 }
 
-function createRtcAnswerChannel(slug: Slug, clientId: string): Channel<AnswerSignalEvent> {
-  return eventChannel(emitter => signalhubApi.listenForMessages(slug, evt => {
+function createRtcAnswerChannel(signal: Signal, slug: Slug, clientId: string): Channel<AnswerSignalEvent> {
+  return eventChannel(emitter => signal.listenForMessages(slug, evt => {
     if (isAnswerSignalEvent(evt) && evt.clientId === clientId) {
       emitter(evt);
       emitter(END);
