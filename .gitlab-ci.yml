@@ -2,11 +2,15 @@ image: node:latest
 
 stages:
   - build
+  - deploy
 
 cache:
   paths:
     - packages/signal/node_modules/
     - packages/web/node_modules/
+
+variables:
+  NODE_ENV: production
 
 build-web:
   stage: build
@@ -14,9 +18,8 @@ build-web:
     - cd packages/web
     - npm install --production=false
     - npm run build
-    - rm build/static/js/*.map
+    - rm build/static/**/*.map
   variables:
-    NODE_ENV: production
     REACT_APP_CONFIG_URL: /config.json
   artifacts:
     paths:
@@ -29,11 +32,21 @@ build-signal:
     - cd packages/signal
     - npm install --production=false
     - npm run build
-  variables:
-    NODE_ENV: production
   artifacts:
     paths:
       - packages/signal/lib/
       - packages/signal/package.json
       - packages/signal/package-lock.json
     expire_in: 10 minutes
+
+
+deploy-web:
+  stage: deploy
+  environment: live
+  when: manual
+  dependencies:
+    - build-web
+  before_script:
+    - apt install awscli
+  script:
+    - aws s3 sync build $(WEB_BUCKET)
