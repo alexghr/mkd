@@ -8,6 +8,7 @@ export type Slug = string;
 export type Document = {
   slug: Slug,
   text: string,
+  title?: string,
   shared?: boolean
 };
 

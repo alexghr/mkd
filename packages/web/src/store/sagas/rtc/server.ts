@@ -73,9 +73,11 @@ function* updateClient(
   dataChannel: RTCDataChannel, action: DocumentAction.UpdateDocument
 ): Iterator<Effect> {
   if (dataChannel.readyState === 'open') {
+    const currentDocument = yield select(getDocument);
+
     yield call(
       [dataChannel, dataChannel.send],
-      JSON.stringify(documentUpdateEvent(action.payload))
+      JSON.stringify(documentUpdateEvent(currentDocument))
     );
   } else {
     yield cancel();
@@ -102,9 +104,6 @@ function createRtcAnswerChannel(signal: Signal, slug: Slug, clientId: string): C
 function documentUpdateEvent(document: Document): DocumentUpdateEvent {
   return {
     type: DocumentUpdateEvent,
-    document: {
-      slug: document.slug,
-      text: document.text
-    }
+    document
   };
 }

@@ -48,7 +48,8 @@ export namespace DocumentAction {
     type: typeof UpdateDocument,
     payload: {
       slug: Slug,
-      text: string
+      text?: string,
+      title?: string
     }
   };
 
@@ -71,10 +72,11 @@ export namespace DocumentAction {
     payload: { text }
   });
 
-  export const updateDocument: ActionCreator<UpdateDocument> = (slug: string, text: string) => ({
-    type: UpdateDocument,
-    payload: { slug, text }
-  });
+  export const updateDocument: ActionCreator<UpdateDocument> =
+    (slug: string, params: { text?: string, title?: string }) => ({
+      type: UpdateDocument,
+      payload: { slug, ...params }
+    });
 
   export const loadDocument: ActionCreator<LoadDocument> = (slug: Slug) => ({
     type: LoadDocument,

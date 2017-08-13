@@ -21,7 +21,7 @@ function* loadDocument(action: DocumentAction.LoadDocument): Iterator<Effect> {
 
   if (documentApi.ownsDocument(slug)) {
     const doc = documentApi.restoreDocument(slug);
-    yield put(DocumentAction.updateDocument(doc.slug, doc.text));
+    yield put(DocumentAction.updateDocument(doc.slug, doc));
 
     if (doc.shared) {
       yield put(DocumentAction.shareDocument(slug));

@@ -3,9 +3,9 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 
 import { AppState, Slug } from '../store/state';
 import { ClientAction } from '../store/action';
-import { getText } from '../store/selectors';
+import { getDocument } from '../store/selectors';
 
-import MkdViewer from '../Mkd/Viewer';
+import DocumentViewer from '../Mkd/DocumentViewer';
 
 import './Share.css';
 
@@ -16,11 +16,11 @@ class SharePage extends React.Component<Props, State> {
   }
 
   render() {
-    const { text } = this.props;
+    const { document } = this.props;
 
     return (
       <div className="mkd-share-page">
-        {text ? <MkdViewer text={text}/> : 'Unknown document ' + this.props.slug}
+        {document ? <DocumentViewer document={document}/> : 'Unknown document ' + this.props.slug}
       </div>
     );
   }
@@ -35,7 +35,7 @@ type OwnProps = {
 };
 
 type StateProps = {
-  text: string
+  document: AppState['document']
 };
 
 type DispatchProps = {
@@ -43,7 +43,7 @@ type DispatchProps = {
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
-  text: getText(state)
+  document: getDocument(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch, props) => ({

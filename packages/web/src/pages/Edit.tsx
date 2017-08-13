@@ -15,19 +15,24 @@ class EditPage extends React.Component<Props, State> {
   onChangeBound = this.onChange.bind(this);
   onShareBound = this.onShare.bind(this);
   onShareLinkClickBound = this.onShareLinkClick.bind(this);
+  onTitleChangeBound = this.onTitleChange.bind(this);
 
   componentDidMount(): void {
     this.props.loadDocument();
   }
 
   render(): JSX.Element {
-    const { document, slug } = this.props;
+    const { document } = this.props;
     const text = document ? document.text : '';
+    const title = document && document.title ? document.title : 'Untitled';
 
     return (
       <section className="mkd-edit-page">
         <header className="mkd-edit-page-header">
-          <h1 className="mkd-edit-page-title">{slug}</h1>
+          <div className="mkd-edit-page-title-container">
+            <span className="mkd-edit-page-title-dummy">{title}</span>
+            <input className="mkd-edit-page-title" onChange={this.onTitleChangeBound} value={title}/>
+          </div>
           {this.renderShare(document)}
         </header>
         <div className="mkd-edit-page-content">
@@ -78,6 +83,10 @@ class EditPage extends React.Component<Props, State> {
   onShareLinkClick(evt: React.MouseEvent<HTMLSpanElement>): void {
     getSelection().selectAllChildren(evt.currentTarget);
   }
+
+  onTitleChange(evt: React.ChangeEvent<HTMLInputElement>): void {
+    this.props.setTitle(evt.currentTarget.value);
+  }
 }
 
 function shareLink(slug: Slug): string {
@@ -99,6 +108,7 @@ type StateProps = {
 type DispatchProps = {
   loadDocument: () => void,
   setText: (text: string) => void,
+  setTitle: (title: string | null) => void,
   share: () => void,
 };
 
@@ -110,7 +120,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatc
   loadDocument: () => props ? dispatch(DocumentAction.loadDocument(props.slug)) : null,
 
   setText: (text: string) => props
-    ? dispatch(DocumentAction.updateDocument(props.slug, text))
+    ? dispatch(DocumentAction.updateDocument(props.slug, { text }))
+    : null,
+
+  setTitle: (title: string) => props
+    ? dispatch(DocumentAction.updateDocument(props.slug, { title }))
     : null,
 
   share: () => props ? dispatch(DocumentAction.shareDocument(props.slug)) : null,

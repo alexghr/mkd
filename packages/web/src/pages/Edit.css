@@ -25,9 +25,34 @@
   align-items: center;
 }
 
-.mkd-edit-page-title {
+.mkd-edit-page-title-container {
   display: inline-block;
-  margin: 0 1rem 0 0;
+  position: relative;
+  padding: 0 0.5rem 0 0;
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.mkd-edit-page-title-dummy {
+  display: inline-block;
+  visibility: hidden;
+  font-family: inherit;
+}
+
+.mkd-edit-page-title {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.mkd-edit-page-title:focus {
+  outline: none;
+  text-decoration: underline;
 }
 
 .mkd-edit-page-content {

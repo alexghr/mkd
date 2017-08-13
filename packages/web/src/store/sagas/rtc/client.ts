@@ -61,7 +61,7 @@ function* connectToServer(
 }
 
 function* updateDocument(event: DocumentUpdateEvent): Iterator<Effect> {
-  yield put(DocumentAction.updateDocument(event.document.slug, event.document.text));
+  yield put(DocumentAction.updateDocument(event.document.slug, event.document));
 }
 
 function createRtcOfferChannel(signal: Signal, slug: Slug, clientId: string): Channel<OfferSignalEvent> {

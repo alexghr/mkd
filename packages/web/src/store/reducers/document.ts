@@ -18,9 +18,9 @@ const documentReducer: Reducer<AppState['document']> =
     case DocumentAction.UpdateDocument:
       return {
         shared: false,
+        text: '',
         ...state,
-        slug: action.payload.slug,
-        text: action.payload.text,
+        ...action.payload
       };
 
     default:

@@ -6,7 +6,7 @@ const Viewer = (props: Props) => {
   const html = marked(text);
 
   return (
-    <div
+    <article
       className="mkd-viewer-content"
       dangerouslySetInnerHTML={{__html: html}}
     />
