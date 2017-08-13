@@ -7,6 +7,8 @@ import { getText } from '../store/selectors';
 
 import MkdViewer from '../Mkd/Viewer';
 
+import './Share.css';
+
 class SharePage extends React.Component<Props, State> {
 
   componentDidMount() {
@@ -17,7 +19,7 @@ class SharePage extends React.Component<Props, State> {
     const { text } = this.props;
 
     return (
-      <div className="share-page">
+      <div className="mkd-share-page">
         {text ? <MkdViewer text={text}/> : 'Unknown document ' + this.props.slug}
       </div>
     );

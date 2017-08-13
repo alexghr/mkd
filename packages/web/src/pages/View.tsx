@@ -7,6 +7,8 @@ import { getText } from '../store/selectors';
 
 import MkdViewer from '../Mkd/Viewer';
 
+import './View.css';
+
 class ViewPage extends React.Component<Props, State> {
 
   componentDidMount() {
@@ -17,9 +19,9 @@ class ViewPage extends React.Component<Props, State> {
     const { text } = this.props;
 
     return (
-      <div className="view-page">
+      <section className="mkd-view-page">
         {text ? <MkdViewer text={text}/> : 'Unknown document ' + this.props.slug}
-      </div>
+      </section>
     );
   }
 }
