@@ -40,7 +40,8 @@ function* initiateConnection(action: ClientAction.InitServerConnection): Iterato
 function* connectToServer(
   signal: Signal, slug: Slug, clientId: ClientId, event: OfferSignalEvent
 ): Iterator<Effect | Array<Effect>> {
-  const rtcConn = yield call(rtcApi.createRTCConnection);
+  const config = yield select(getConfig);
+  const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
 
   const [answer, candidates] = yield call(rtcApi.makeAnswer, rtcConn, event.offer);
 

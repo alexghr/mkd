@@ -1,3 +1,4 @@
 {
-  "signalUrl": "http://localhost:8080"
+  "signalUrl": "http://localhost:8080",
+  "stunServers": []
 }

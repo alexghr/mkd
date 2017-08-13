@@ -1,5 +1,7 @@
-export function createRTCConnection() {
-  return new RTCPeerConnection({});
+export function createRTCConnection(stunServers: Array<string>) {
+  return new RTCPeerConnection({
+    iceServers: stunServers.map(urls => ({ urls }))
+  });
 }
 
 export function gatherIceCandidates(rtcConn: RTCPeerConnection): Promise<Array<RTCIceCandidate>> {

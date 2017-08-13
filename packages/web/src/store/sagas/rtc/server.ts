@@ -32,7 +32,8 @@ function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effe
 
 function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
   const { clientId } = evt;
-  const rtcConn = yield call(rtcApi.createRTCConnection);
+  const config: Config = yield select(getConfig);
+  const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
   const dataChannel = yield call([rtcConn, rtcConn.createDataChannel], slug, {});
 
   const answerChannel = yield call(createRtcAnswerChannel, signal, slug, clientId);

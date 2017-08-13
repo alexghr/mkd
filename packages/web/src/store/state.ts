@@ -13,7 +13,8 @@ export type Document = {
 };
 
 export type Config = {
-  signalUrl: string
+  signalUrl: string,
+  stunServers: Array<string>
 };
 
 export const initialState: AppState = {
