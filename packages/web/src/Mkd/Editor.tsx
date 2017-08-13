@@ -1,11 +1,13 @@
 import * as React from 'react';
 
+import './Editor.css';
+
 export default class Editor extends React.Component<Props, State> {
   onChangeBound = this.onChange.bind(this);
 
   render(): JSX.Element {
     return (
-      <textarea value={this.props.text} onChange={this.onChangeBound}/>
+      <textarea className="mkd-editor" value={this.props.text} onChange={this.onChangeBound}/>
     );
   }
 

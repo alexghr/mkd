@@ -1,0 +1,66 @@
+.mkd-edit-page {
+
+  --header-background-color: hsl(0, 0%, 97%);
+  --header-box-shadow: hsl(0, 0%, 90%);
+
+  --separator-border: hsl(0, 0%, 80%);
+
+  --v-spacing: 0.5rem;
+  --h-spacing: 1rem;
+
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+}
+
+.mkd-edit-page-header {
+  display: flex;
+  flex-flow: row nowrap;
+  border-bottom: 1px solid var(--separator-border);
+  padding: var(--v-spacing) var(--h-spacing);
+
+  background-color: var(--header-background-color);
+  box-shadow: 0 5px 5px -2px var(--header-box-shadow);
+
+  align-items: center;
+}
+
+.mkd-edit-page-title {
+  display: inline-block;
+  margin: 0 1rem 0 0;
+}
+
+.mkd-edit-page-content {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
+}
+
+.mkd-edit-page-editor,
+.mkd-edit-page-renderer {
+  flex-basis: 50%;
+  padding: var(--v-spacing) var(--h-spacing);
+}
+
+.mkd-edit-page-separator {
+  width: 0.1rem;
+  background-color: var(--separator-border);
+  height: 100%;
+}
+
+.mkd-edit-page-share-msg {
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.mkd-edit-page-share-link {
+  margin-left: 0.25em;
+  transition: background-color, color 100ms linear;
+  padding: 0.15em 0.25em;
+  border-radius: 0.25em;
+  user-select: auto;
+}
+
+.mkd-edit-page-share-link:hover {
+  cursor: copy;
+}

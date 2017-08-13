@@ -1,0 +1,47 @@
+:root {
+  --page-text-color: hsl(0, 0%, 16%);
+  --page-background-color: hsl(0, 0%, 98%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  display: block;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+html {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+#root {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+
+  background-color: var(--page-background-color);
+  color: var(--page-text-color);
+}
+
+[data-reactroot] {
+  height: 100%;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+  margin-top: 0;
+}

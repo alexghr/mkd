@@ -8,41 +8,80 @@ import {  getDocument } from '../store/selectors';
 import MkdEditor from '../Mkd/Editor';
 import MkdViewer from '../Mkd/Viewer';
 
+import './Edit.css';
+
 class EditPage extends React.Component<Props, State> {
 
   onChangeBound = this.onChange.bind(this);
   onShareBound = this.onShare.bind(this);
+  onShareLinkClickBound = this.onShareLinkClick.bind(this);
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.props.loadDocument();
   }
 
-  render() {
+  render(): JSX.Element {
     const { document, slug } = this.props;
     const text = document ? document.text : '';
-    const shared = document ? document.shared : false;
 
     return (
-      <div className="edit-page">
-        <h1>{slug}</h1>
-        {shared ? null : <button onClick={this.onShareBound}>Share</button>}
-        <div>
-          <MkdEditor text={text} onChange={this.onChangeBound}/>
+      <section className="mkd-edit-page">
+        <header className="mkd-edit-page-header">
+          <h1 className="mkd-edit-page-title">{slug}</h1>
+          {this.renderShare(document)}
+        </header>
+        <div className="mkd-edit-page-content">
+          <div className="mkd-edit-page-editor">
+            <MkdEditor text={text} onChange={this.onChangeBound}/>
+          </div>
+          <div className="mkd-edit-page-separator"/>
+          <div className="mkd-edit-page-renderer">
+            <MkdViewer text={text}/>
+          </div>
         </div>
-        <div>
-          <MkdViewer text={text}/>
-        </div>
+      </section>
+    );
+  }
+
+  renderShare(document: Document | null): JSX.Element | null {
+    if (!document) {
+      return null;
+    }
+
+    const { shared, slug } = document;
+
+    return (
+      <div className="mkd-edit-page-share-container">
+        {shared
+          ? <span className="mkd-edit-page-share-msg">
+              Share link
+                <span className="mkd-edit-page-share-link" onClick={this.onShareLinkClickBound}>
+                  {shareLink(slug)}
+                </span>
+            </span>
+          : <button className="mkd-edit-page-share-btn" onClick={this.onShareBound}>
+              Share
+            </button>
+        }
       </div>
     );
   }
 
-  onShare() {
+  onShare(): void {
     this.props.share();
   }
 
   onChange(text: string): void {
     this.props.setText(text);
   }
+
+  onShareLinkClick(evt: React.MouseEvent<HTMLSpanElement>): void {
+    getSelection().selectAllChildren(evt.currentTarget);
+  }
+}
+
+function shareLink(slug: Slug): string {
+  return window.location.origin + '/share/' + slug;
 }
 
 type State = {};

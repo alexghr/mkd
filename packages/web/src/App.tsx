@@ -24,9 +24,7 @@ class App extends React.Component<Props, object> {
     }
 
     return (
-      <div className="App">
-        <Router/>
-      </div>
+      <Router/>
     );
   }
 }

@@ -1,0 +1,14 @@
+.mkd-editor {
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  resize: none;
+
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.mkd-editor:focus {
+  outline-color: transparent;
+}
