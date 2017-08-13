@@ -18,7 +18,6 @@ build-web:
     - cd packages/web
     - npm install --production=false
     - npm run build
-    - rm build/static/**/*.map
   variables:
     REACT_APP_CONFIG_URL: /config.json
   artifacts:
@@ -28,15 +27,15 @@ build-web:
 
 build-signal:
   stage: build
+  before_script:
+    - apt install zip
   script:
     - cd packages/signal
     - npm install --production=false
     - npm run build
   artifacts:
     paths:
-      - packages/signal/lib/
-      - packages/signal/package.json
-      - packages/signal/package-lock.json
+      - packages/signal/build/
     expire_in: 10 minutes
 
 
@@ -49,4 +48,4 @@ deploy-web:
   before_script:
     - apt install awscli
   script:
-    - aws s3 sync build $(WEB_BUCKET)
+    - npm run deploy

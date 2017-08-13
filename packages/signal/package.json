@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node lib",
-    "build": "echo 'Built!'"
+    "prebuild": "mkdir build",
+    "build": "zip -r build/mkd-signal.zip package.json package-lock.json lib/"
   },
   "keywords": [],
   "author": "",
