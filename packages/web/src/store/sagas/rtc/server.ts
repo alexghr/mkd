@@ -1,4 +1,4 @@
-import { Effect, takeEvery, take, call, all, cancel, join, fork, select } from 'redux-saga/effects';
+import { Effect, takeEvery, take, call, all, cancel, join, fork, select, spawn } from 'redux-saga/effects';
 import { Channel, eventChannel, END } from 'redux-saga';
 
 import { Slug, Document, Config } from '../../state';
@@ -11,8 +11,10 @@ import * as rtcApi from '../../api/rtc';
 import {
   OfferSignalEvent, DocumentUpdateEvent,
   ClientSignalEvent, isClientSignalEvent,
-  AnswerSignalEvent, isAnswerSignalEvent
+  AnswerSignalEvent, isAnswerSignalEvent,
 } from './types';
+
+import { shareIceCandidates, handleIceCandidates } from './common';
 
 export default function* serverSaga(): Iterator<Effect> {
   yield all([
@@ -32,22 +34,24 @@ function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effe
 
 function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
   const { clientId } = evt;
+
   const config: Config = yield select(getConfig);
   const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
   const dataChannel = yield call([rtcConn, rtcConn.createDataChannel], slug, {});
 
   const answerChannel = yield call(createRtcAnswerChannel, signal, slug, clientId);
-
-  const [offer, candidates] = yield call(rtcApi.makeOffer, rtcConn);
+  const offer = yield call(rtcApi.makeOffer, rtcConn);
 
   yield call([signal, signal.broadcast], slug, {
+      type: OfferSignalEvent,
       offer,
-      candidates,
-      clientId,
-      type: OfferSignalEvent
+      clientId
   });
 
   const answerEvent: AnswerSignalEvent = yield take(answerChannel);
+
+  yield spawn(shareIceCandidates, rtcConn, clientId, signal, slug, 'server');
+  yield spawn(handleIceCandidates, rtcConn, clientId, signal, slug, 'client');
 
   yield join(
     yield fork(rtcApi.awaitDataChannelOpen, dataChannel),

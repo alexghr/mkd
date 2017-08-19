@@ -7,8 +7,9 @@ export type DocumentUpdateEvent = {
 };
 
 export type ClientId = string;
+export type SignalEventSource = 'server' | 'client';
 
-export type SignalEvent = OfferSignalEvent | AnswerSignalEvent | ClientSignalEvent;
+export type SignalEvent = OfferSignalEvent | AnswerSignalEvent | ClientSignalEvent | CandidateSignalEvent;
 
 export const OfferSignalEvent = 'offer';
 export type OfferSignalEvent = {
@@ -22,6 +23,14 @@ export type AnswerSignalEvent = {
   type: typeof AnswerSignalEvent,
   clientId: ClientId,
   answer: object
+};
+
+export const CandidateSignalEvent = 'candidate';
+export type CandidateSignalEvent = {
+  type: typeof CandidateSignalEvent,
+  clientId: ClientId,
+  candidate: object,
+  source: SignalEventSource
 };
 
 export const ClientSignalEvent = 'client';
@@ -48,4 +57,8 @@ export function isOfferSignalEvent(event: object): event is OfferSignalEvent {
 
 export function isAnswerSignalEvent(event: object): event is AnswerSignalEvent {
   return isSignalEvent(event) && event.type === AnswerSignalEvent;
+}
+
+export function isCandidateSignalEvent(event: object): event is CandidateSignalEvent {
+  return isSignalEvent(event) && event.type === CandidateSignalEvent;
 }

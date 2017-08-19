@@ -22,19 +22,17 @@ export function gatherIceCandidates(rtcConn: RTCPeerConnection): Promise<Array<R
   });
 }
 
-export function makeOffer(rtcConn: RTCPeerConnection): Promise<SessionCandidatesTuple> {
+export function makeOffer(rtcConn: RTCPeerConnection): Promise<RTCSessionDescription> {
   return rtcConn.createOffer()
     .then(offer => rtcConn.setLocalDescription(offer))
-    .then(() => gatherIceCandidates(rtcConn))
-    .then<SessionCandidatesTuple>((candidates) => [rtcConn.localDescription!, candidates]);
+    .then(() => rtcConn.localDescription!);
 }
 
-export function makeAnswer(rtcConn: RTCPeerConnection, offer: RTCSessionDescription): Promise<SessionCandidatesTuple> {
+export function makeAnswer(rtcConn: RTCPeerConnection, offer: RTCSessionDescription): Promise<RTCSessionDescription> {
   return rtcConn.setRemoteDescription(offer)
     .then(() => rtcConn.createAnswer())
     .then(answer => rtcConn.setLocalDescription(answer))
-    .then(() => gatherIceCandidates(rtcConn))
-    .then<SessionCandidatesTuple>(candidates => [rtcConn.localDescription!, candidates]);
+    .then(() => rtcConn.localDescription!);
 }
 
 export function awaitDataChannel(rtcConn: RTCPeerConnection): Promise<RTCDataChannel> {
@@ -52,5 +50,3 @@ export function awaitDataChannelOpen(dataChannel: RTCDataChannel): Promise<RTCDa
     }
   });
 }
-
-type SessionCandidatesTuple = [RTCSessionDescription, Array<RTCIceCandidate>];

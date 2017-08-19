@@ -15,6 +15,8 @@ import {
   OfferSignalEvent, isOfferSignalEvent
 } from './types';
 
+import { shareIceCandidates, handleIceCandidates } from './common';
+
 export default function* clientSaga(): Iterator<Effect> {
   yield all([
     takeEvery(ClientAction.InitServerConnection, initiateConnection)
@@ -24,6 +26,7 @@ export default function* clientSaga(): Iterator<Effect> {
 function* initiateConnection(action: ClientAction.InitServerConnection): Iterator<Effect> {
   const { slug } = action.payload;
   const clientId = yield call(randomString);
+
   const config: Config = yield select(getConfig);
   const signal = yield call(() => new Signal(config.signalUrl));
 
@@ -43,14 +46,16 @@ function* connectToServer(
   const config = yield select(getConfig);
   const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
 
-  const [answer, candidates] = yield call(rtcApi.makeAnswer, rtcConn, event.offer);
+  yield fork(handleIceCandidates, rtcConn, clientId, signal, slug, 'server');
+  yield fork(shareIceCandidates, rtcConn, clientId, signal, slug, 'client');
+
+  const answer = yield call(rtcApi.makeAnswer, rtcConn, event.offer);
 
   const results = yield join(
     yield fork([signal, signal.broadcast], slug, {
       type: AnswerSignalEvent,
       answer,
-      candidates,
-      clientId: clientId
+      clientId
     }),
     yield fork(rtcApi.awaitDataChannel, rtcConn)
   );
