@@ -2,7 +2,7 @@ import { Effect, takeEvery, take, call, all, cancel, join, fork, select, spawn }
 import { Channel, eventChannel, END } from 'redux-saga';
 
 import { Slug, Document, Config } from '../../state';
-import { ServerAction, DocumentAction } from '../../action';
+import { ServerAction, DocumentAction, BrowserAction } from '../../action';
 import { getDocument, getConfig } from '../../selectors';
 
 import Signal from '../../api/signal';
@@ -30,14 +30,25 @@ function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effe
   const channel = yield call(createClientChannel, signal, slug);
 
   yield takeEvery(channel, connectToClient, signal, slug);
+  yield takeEvery(BrowserAction.Closing, () => signal.close());
 }
 
 function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
   const { clientId } = evt;
 
   const config: Config = yield select(getConfig);
-  const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
-  const dataChannel = yield call([rtcConn, rtcConn.createDataChannel], slug, {});
+  const rtcConn: RTCPeerConnection = yield call(rtcApi.createRTCConnection, config.stunServers);
+  const dataChannel: RTCDataChannel = yield call([rtcConn, rtcConn.createDataChannel], slug, {});
+
+  yield takeEvery(BrowserAction.Closing, () => {
+    if (dataChannel.readyState === 'open') {
+      dataChannel.close();
+    }
+
+    if (rtcConn.iceConnectionState === 'connected') {
+      rtcConn.close();
+    }
+  });
 
   const answerChannel = yield call(createRtcAnswerChannel, signal, slug, clientId);
   const offer = yield call(rtcApi.makeOffer, rtcConn);

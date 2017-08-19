@@ -1,7 +1,7 @@
 import { ActionCreator } from 'redux';
 import { Slug, Config } from './state';
 
-export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions;
+export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions | BrowserActions;
 export default Action;
 
 export namespace ConfigAction {
@@ -129,3 +129,14 @@ export namespace ClientAction {
 }
 
 type ClientActions = ClientAction.InitServerConnection;
+
+export namespace BrowserAction {
+  export const Closing = 'browser.close';
+  export type Closing = {
+    type: typeof Closing
+  };
+
+  export const closing: ActionCreator<Closing> = () => ({ type: Closing });
+}
+
+type BrowserActions = BrowserAction.Closing;

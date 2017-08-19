@@ -28,6 +28,10 @@ export default class Signal {
     this.connection.broadcast(slug, message);
   }
 
+  close(): void {
+    this.connection.close();
+  }
+
   private get connection(): signalhub.SignalHub {
     if (!this._hubConn) {
       this._hubConn = signalhub('mkd', [this.signalUrl]);

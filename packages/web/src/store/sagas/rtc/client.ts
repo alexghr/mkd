@@ -3,7 +3,7 @@ import { Channel, eventChannel, END } from 'redux-saga';
 
 import { Slug, Config } from '../../state';
 import { getConfig } from '../../selectors';
-import { ClientAction, DocumentAction } from '../../action';
+import { ClientAction, DocumentAction, BrowserAction } from '../../action';
 
 import Signal from '../../api/signal';
 import * as rtcApi from '../../api/rtc';
@@ -38,6 +38,8 @@ function* initiateConnection(action: ClientAction.InitServerConnection): Iterato
   });
 
   yield takeEvery(channel, connectToServer, signal, slug, clientId);
+
+  yield takeEvery(BrowserAction.Closing, () => signal.close());
 }
 
 function* connectToServer(
@@ -45,6 +47,12 @@ function* connectToServer(
 ): Iterator<Effect | Array<Effect>> {
   const config = yield select(getConfig);
   const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
+
+  yield takeEvery(BrowserAction.Closing, () => {
+    if (rtcConn.iceConnectionState === 'connected') {
+      rtcConn.close();
+    }
+  });
 
   yield fork(handleIceCandidates, rtcConn, clientId, signal, slug, 'server');
   yield fork(shareIceCandidates, rtcConn, clientId, signal, slug, 'client');
@@ -61,6 +69,12 @@ function* connectToServer(
   );
 
   const dataChannel: RTCDataChannel = results[1];
+  yield takeEvery(BrowserAction.Closing, () => {
+    if (dataChannel.readyState === 'open') {
+      dataChannel.close();
+    }
+  });
+
   const channel = yield call(createMessageChannel, dataChannel);
 
   yield takeEvery(channel, updateDocument);
