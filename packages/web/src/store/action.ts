@@ -1,7 +1,7 @@
 import { ActionCreator } from 'redux';
-import { Slug, Config } from './state';
+import { Slug, Config, MkdDocuments } from './state';
 
-export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions | BrowserActions;
+export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions | AppActions;
 export default Action;
 
 export namespace ConfigAction {
@@ -35,6 +35,8 @@ export namespace DocumentAction {
   export const NewDocument = 'document.new';
   export const UpdateDocument = 'document.update';
   export const LoadDocument = 'document.restore';
+  export const LoadAllDocuments = 'document.load-all';
+  export const SetAllDocuments = 'document.set-all';
   export const ShareDocument = 'document.share';
 
   export type NewDocument = {
@@ -57,6 +59,17 @@ export namespace DocumentAction {
     type: typeof LoadDocument,
     payload: {
       slug: Slug
+    }
+  };
+
+  export type LoadAllDocuments = {
+    type: typeof LoadAllDocuments
+  };
+
+  export type SetAllDocuments = {
+    type: typeof SetAllDocuments,
+    payload: {
+      documents: MkdDocuments
     }
   };
 
@@ -87,15 +100,25 @@ export namespace DocumentAction {
     type: ShareDocument,
     payload: { slug }
   });
+
+  export const loadAllDocuments: ActionCreator<LoadAllDocuments> = () => ({ type: LoadAllDocuments });
+
+  export const setAllDocuments: ActionCreator<SetAllDocuments> = (documents: MkdDocuments) => ({
+    type: SetAllDocuments,
+    payload: { documents }
+  });
 }
 
 type DocumentActions = DocumentAction.NewDocument
   | DocumentAction.UpdateDocument
   | DocumentAction.LoadDocument
-  | DocumentAction.ShareDocument;
+  | DocumentAction.ShareDocument
+  | DocumentAction.LoadAllDocuments
+  | DocumentAction.SetAllDocuments;
 
 export namespace ServerAction {
   export const ListenForClients = 'ses.server.listenForClients';
+  export const Close = 'ses.server.close';
 
   export type ListenForClients = {
     type: typeof ListenForClients,
@@ -104,16 +127,23 @@ export namespace ServerAction {
     }
   };
 
+  export type Close = {
+    type: typeof Close
+  };
+
   export const listenForClients: ActionCreator<ListenForClients> = (slug: Slug) => ({
     type: ListenForClients,
     payload: { slug }
   });
+
+  export const close: ActionCreator<Close> = () => ({ type: Close });
 }
 
-type ServerActions = ServerAction.ListenForClients;
+type ServerActions = ServerAction.ListenForClients | ServerAction.Close;
 
 export namespace ClientAction {
   export const InitServerConnection = 'ses.client.initiateConnection';
+  export const Close = 'ses.server.close';
 
   export type InitServerConnection = {
     type: typeof InitServerConnection,
@@ -122,21 +152,34 @@ export namespace ClientAction {
     }
   };
 
+  export type Close = {
+    type: typeof Close
+  };
+
   export const initServerConnection: ActionCreator<InitServerConnection> = (slug: Slug) => ({
     type: InitServerConnection,
     payload: { slug }
   });
+
+  export const close: ActionCreator<Close> = () => ({ type: Close });
 }
 
-type ClientActions = ClientAction.InitServerConnection;
+type ClientActions = ClientAction.InitServerConnection | ClientAction.Close;
 
-export namespace BrowserAction {
-  export const Closing = 'browser.close';
-  export type Closing = {
-    type: typeof Closing
+export namespace AppAction {
+  export const Init = 'app.init';
+  export const Close = 'app.close';
+
+  export type Init = {
+    type: typeof Init
   };
 
-  export const closing: ActionCreator<Closing> = () => ({ type: Closing });
+  export type Close = {
+    type: typeof Close
+  };
+
+  export const init: ActionCreator<Init> = () => ({ type: Init });
+  export const close: ActionCreator<Close> = () => ({ type: Close });
 }
 
-type BrowserActions = BrowserAction.Closing;
+type AppActions = AppAction.Init | AppAction.Close;

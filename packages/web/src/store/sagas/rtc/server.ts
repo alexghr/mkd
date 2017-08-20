@@ -1,8 +1,8 @@
 import { Effect, takeEvery, take, call, all, cancel, join, fork, select, spawn } from 'redux-saga/effects';
 import { Channel, eventChannel, END } from 'redux-saga';
 
-import { Slug, Document, Config } from '../../state';
-import { ServerAction, DocumentAction, BrowserAction } from '../../action';
+import { Slug, MkdDocument, Config } from '../../state';
+import { ServerAction, DocumentAction } from '../../action';
 import { getDocument, getConfig } from '../../selectors';
 
 import Signal from '../../api/signal';
@@ -30,7 +30,7 @@ function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effe
   const channel = yield call(createClientChannel, signal, slug);
 
   yield takeEvery(channel, connectToClient, signal, slug);
-  yield takeEvery(BrowserAction.Closing, () => signal.close());
+  yield takeEvery(ServerAction.Close, () => signal.close());
 }
 
 function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
@@ -40,7 +40,7 @@ function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): I
   const rtcConn: RTCPeerConnection = yield call(rtcApi.createRTCConnection, config.stunServers);
   const dataChannel: RTCDataChannel = yield call([rtcConn, rtcConn.createDataChannel], slug, {});
 
-  yield takeEvery(BrowserAction.Closing, () => {
+  yield takeEvery(ServerAction.Close, () => {
     if (dataChannel.readyState === 'open') {
       dataChannel.close();
     }
@@ -117,7 +117,7 @@ function createRtcAnswerChannel(signal: Signal, slug: Slug, clientId: string): C
   }));
 }
 
-function documentUpdateEvent(document: Document): DocumentUpdateEvent {
+function documentUpdateEvent(document: MkdDocument): DocumentUpdateEvent {
   return {
     type: DocumentUpdateEvent,
     document

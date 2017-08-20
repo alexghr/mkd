@@ -1,9 +1,9 @@
-import { Document } from '../../state';
+import { MkdDocument } from '../../state';
 
 export const DocumentUpdateEvent = 'document.update';
 export type DocumentUpdateEvent = {
   type: typeof DocumentUpdateEvent,
-  document: Document
+  document: MkdDocument
 };
 
 export type ClientId = string;

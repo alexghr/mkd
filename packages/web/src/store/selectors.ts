@@ -10,5 +10,8 @@ export const getText: Selector<AppState, string> =
 export const getDocument: Selector<AppState, AppState['document']> =
   (state) => state.document;
 
+export const getDocuments: Selector<AppState, AppState['documents']> =
+  (state) => state.documents;
+
 export const getConfig: Selector<AppState, AppState['config']> =
   (state) => state.config;

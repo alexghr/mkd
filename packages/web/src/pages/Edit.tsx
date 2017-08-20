@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 
-import { AppState, Slug, Document } from '../store/state';
+import { AppState, Slug, MkdDocument } from '../store/state';
 import { DocumentAction } from '../store/action';
 import {  getDocument } from '../store/selectors';
 
@@ -48,7 +48,7 @@ class EditPage extends React.Component<Props, State> {
     );
   }
 
-  renderShare(document: Document | null): JSX.Element | null {
+  renderShare(document: MkdDocument | null): JSX.Element | null {
     if (!document) {
       return null;
     }
@@ -102,7 +102,7 @@ type OwnProps = {
 };
 
 type StateProps = {
-  document: Document | null
+  document: MkdDocument | null
 };
 
 type DispatchProps = {

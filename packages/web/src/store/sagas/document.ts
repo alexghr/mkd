@@ -4,6 +4,16 @@ import * as documentApi from '../api/doc-storage';
 import { randomString } from '../util';
 import { DocumentAction, ServerAction } from '../action';
 
+export default function* slugSaga(): Iterator<Effect> {
+  yield all([
+    takeEvery(DocumentAction.NewDocument, newDocument),
+    takeEvery(DocumentAction.UpdateDocument, saveDocument),
+    takeEvery(DocumentAction.LoadDocument, loadDocument),
+    takeEvery(DocumentAction.ShareDocument, shareDocument),
+    takeEvery(DocumentAction.LoadAllDocuments, loadAllDocuments)
+  ]);
+}
+
 function* newDocument(action: DocumentAction.NewDocument): Iterator<Effect> {
   const text = action.payload.text;
   const slug = yield call(randomString);
@@ -37,11 +47,7 @@ function* shareDocument(action: DocumentAction.ShareDocument): Iterator<Effect> 
   yield put(ServerAction.listenForClients(slug));
 }
 
-export default function* slugSaga(): Iterator<Effect> {
-  yield all([
-    takeEvery(DocumentAction.NewDocument, newDocument),
-    takeEvery(DocumentAction.UpdateDocument, saveDocument),
-    takeEvery(DocumentAction.LoadDocument, loadDocument),
-    takeEvery(DocumentAction.ShareDocument, shareDocument)
-  ]);
+function* loadAllDocuments(action: DocumentAction.LoadAllDocuments): Iterator<Effect> {
+  const docs = yield call(documentApi.restoreAllDocuments);
+  yield put(DocumentAction.setAllDocuments(docs));
 }

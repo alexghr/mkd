@@ -3,7 +3,7 @@ import { Channel, eventChannel, END } from 'redux-saga';
 
 import { Slug, Config } from '../../state';
 import { getConfig } from '../../selectors';
-import { ClientAction, DocumentAction, BrowserAction } from '../../action';
+import { ClientAction, DocumentAction } from '../../action';
 
 import Signal from '../../api/signal';
 import * as rtcApi from '../../api/rtc';
@@ -39,7 +39,7 @@ function* initiateConnection(action: ClientAction.InitServerConnection): Iterato
 
   yield takeEvery(channel, connectToServer, signal, slug, clientId);
 
-  yield takeEvery(BrowserAction.Closing, () => signal.close());
+  yield takeEvery(ClientAction.Close, () => signal.close());
 }
 
 function* connectToServer(
@@ -48,7 +48,7 @@ function* connectToServer(
   const config = yield select(getConfig);
   const rtcConn = yield call(rtcApi.createRTCConnection, config.stunServers);
 
-  yield takeEvery(BrowserAction.Closing, () => {
+  yield takeEvery(ClientAction.Close, () => {
     if (rtcConn.iceConnectionState === 'connected') {
       rtcConn.close();
     }
@@ -69,7 +69,7 @@ function* connectToServer(
   );
 
   const dataChannel: RTCDataChannel = results[1];
-  yield takeEvery(BrowserAction.Closing, () => {
+  yield takeEvery(ClientAction.Close, () => {
     if (dataChannel.readyState === 'open') {
       dataChannel.close();
     }

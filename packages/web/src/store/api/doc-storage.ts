@@ -1,8 +1,8 @@
-import { Document, Slug } from '../state';
+import { MkdDocument, MkdDocuments, Slug } from '../state';
 
-type Docs = Record<Slug, Document>;
+type Docs = Record<Slug, MkdDocument>;
 
-export function storeDocument(document: Partial<Document>) {
+export function storeDocument(document: Partial<MkdDocument>) {
   if (!document.slug) {
     throw new Error();
   }
@@ -18,13 +18,17 @@ export function storeDocument(document: Partial<Document>) {
   });
 }
 
-export function restoreDocument(slug: Slug): Document {
+export function restoreDocument(slug: Slug): MkdDocument {
   const docs = getDocs();
   if (docs[slug]) {
     return docs[slug];
   } else {
     throw new Error();
   }
+}
+
+export function restoreAllDocuments(): MkdDocuments {
+  return getDocs();
 }
 
 export function ownsDocument(slug: Slug): boolean {

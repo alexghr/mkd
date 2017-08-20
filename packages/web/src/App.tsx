@@ -3,7 +3,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { AppState, Config } from './store/state';
 import { getConfig } from './store/selectors';
-import { ConfigAction, BrowserAction } from './store/action';
+import { AppAction } from './store/action';
 
 import Router from './Router';
 import './App.css';
@@ -13,10 +13,7 @@ class App extends React.Component<Props, object> {
   onBrowserCloseBound = this.onBrowserClose.bind(this);
 
   componentDidMount(): void {
-    if (!this.props.config) {
-      this.props.loadConfig();
-    }
-
+    this.props.init();
     window.addEventListener('beforeunload', this.onBrowserCloseBound);
   }
 
@@ -37,7 +34,7 @@ class App extends React.Component<Props, object> {
   }
 
   onBrowserClose(): void {
-    this.props.onBrowserClose();
+    this.props.close();
   }
 }
 
@@ -50,8 +47,8 @@ type StateProps = {
 };
 
 type DispatchProps = {
-  loadConfig: () => void,
-  onBrowserClose: () => void
+  init: () => void,
+  close: () => void
 };
 
 const stateToProps: MapStateToProps<StateProps, OwnProps> =
@@ -61,8 +58,8 @@ const stateToProps: MapStateToProps<StateProps, OwnProps> =
 
 const dispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> =
   (dispatch) => ({
-    loadConfig: () => dispatch(ConfigAction.loadConfig()),
-    onBrowserClose: () => dispatch(BrowserAction.closing())
+    init: () => dispatch(AppAction.init()),
+    close: () => dispatch(AppAction.close())
   });
 
 export default connect(stateToProps, dispatchToProps)(App);

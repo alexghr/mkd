@@ -2,9 +2,9 @@ import * as React from 'react';
 import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { AppState, Slug } from '../store/state';
+import { AppState, Slug, MkdDocuments } from '../store/state';
 import { DocumentAction } from '../store/action';
-import { getSlug } from '../store/selectors';
+import { getSlug, getDocuments } from '../store/selectors';
 
 class IndexPage extends React.Component<Props, State> {
 
@@ -36,7 +36,8 @@ type Props = OwnProps & StateProps & DispatchProps;
 type OwnProps = {};
 
 type StateProps = {
-  slug: Slug | null
+  slug: Slug | null,
+  documents: MkdDocuments | null
 };
 
 type DispatchProps = {
@@ -44,7 +45,8 @@ type DispatchProps = {
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
-  slug: getSlug(state)
+  slug: getSlug(state),
+  documents: getDocuments(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch) => ({

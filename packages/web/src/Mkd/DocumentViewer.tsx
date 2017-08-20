@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Viewer from './Viewer';
-import { Document } from '../store/state';
+import { MkdDocument } from '../store/state';
 
 import './DocumentViewer.css';
 
@@ -20,7 +20,7 @@ export default class DocumentViewer extends React.Component<Props, State> {
 }
 
 type Props = {
-  document: Document
+  document: MkdDocument
 };
 
 type State = {};
