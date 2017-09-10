@@ -8,13 +8,18 @@ import { getSlug, getDocuments } from '../store/selectors';
 
 class IndexPage extends React.Component<Props, State> {
 
+  state = {
+    redirect: false
+  };
+
   onNewDocBound = this.onNewDoc.bind(this);
 
   render() {
+    const { redirect } = this.state;
     const { slug } = this.props;
 
-    if (slug) {
-      return (<Redirect to={`/edit/${slug}`}/>);
+    if (redirect && slug) {
+      return (<Redirect push={true} to={`/edit/${slug}`}/>);
     }
 
     return (
@@ -26,10 +31,13 @@ class IndexPage extends React.Component<Props, State> {
 
   onNewDoc() {
     this.props.newDocument();
+    this.setState({ redirect: true });
   }
 }
 
-type State = {};
+type State = {
+  redirect: boolean
+};
 
 type Props = OwnProps & StateProps & DispatchProps;
 
