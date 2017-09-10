@@ -1,5 +1,5 @@
 import { ActionCreator } from 'redux';
-import { Slug, Config, MkdDocuments } from './state';
+import { Slug, Config, MkdDocument, MkdDocuments } from './state';
 
 export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions | AppActions;
 export default Action;
@@ -35,6 +35,7 @@ export namespace DocumentAction {
   export const NewDocument = 'document.new';
   export const UpdateDocument = 'document.update';
   export const LoadDocument = 'document.restore';
+  export const SetDocument = 'document.set';
   export const LoadAllDocuments = 'document.load-all';
   export const SetAllDocuments = 'document.set-all';
   export const ShareDocument = 'document.share';
@@ -50,8 +51,7 @@ export namespace DocumentAction {
     type: typeof UpdateDocument,
     payload: {
       slug: Slug,
-      text?: string,
-      title?: string
+      document: Partial<MkdDocument>
     }
   };
 
@@ -73,6 +73,13 @@ export namespace DocumentAction {
     }
   };
 
+  export type SetDocument = {
+    type: typeof SetDocument,
+    payload: {
+      document: MkdDocument
+    }
+  };
+
   export type ShareDocument = {
     type: typeof ShareDocument,
     payload: {
@@ -86,9 +93,15 @@ export namespace DocumentAction {
   });
 
   export const updateDocument: ActionCreator<UpdateDocument> =
-    (slug: string, params: { text?: string, title?: string }) => ({
+    (slug: string, document: Partial<MkdDocument>) => ({
       type: UpdateDocument,
-      payload: { slug, ...params }
+      payload: { slug, document }
+    });
+
+  export const setDocument: ActionCreator<SetDocument> =
+    (document: MkdDocument) => ({
+      type: SetDocument,
+      payload: { document }
     });
 
   export const loadDocument: ActionCreator<LoadDocument> = (slug: Slug) => ({
@@ -110,8 +123,9 @@ export namespace DocumentAction {
 }
 
 type DocumentActions = DocumentAction.NewDocument
-  | DocumentAction.UpdateDocument
   | DocumentAction.LoadDocument
+  | DocumentAction.UpdateDocument
+  | DocumentAction.SetDocument
   | DocumentAction.ShareDocument
   | DocumentAction.LoadAllDocuments
   | DocumentAction.SetAllDocuments;

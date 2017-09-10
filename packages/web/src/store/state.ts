@@ -1,5 +1,5 @@
 export type AppState = {
-  documents: MkdDocuments | null,
+  documents: MkdDocuments,
   document: MkdDocument | null,
   config: Config | null
 };
@@ -10,7 +10,9 @@ export type MkdDocument = {
   slug: Slug,
   text: string,
   title?: string,
-  shared?: boolean
+  shared?: boolean,
+  createdAt: Date,
+  updatedAt: Date
 };
 
 export type MkdDocuments = Record<Slug, MkdDocument>;
@@ -21,7 +23,7 @@ export type Config = {
 };
 
 export const initialState: AppState = {
-  documents: null,
+  documents: {},
   document: null,
   config: null
 };

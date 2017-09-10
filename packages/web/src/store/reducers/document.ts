@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 
-import { AppState, initialState } from '../state';
+import { AppState, initialState, MkdDocument } from '../state';
 import { Action, DocumentAction } from '../action';
 
 const documentReducer: Reducer<AppState['document']> =
@@ -9,19 +9,12 @@ const documentReducer: Reducer<AppState['document']> =
 
     case DocumentAction.ShareDocument:
       return {
-        slug: action.payload.slug,
-        text: '',
         ...state,
         shared: true
-      };
+      } as MkdDocument;
 
-    case DocumentAction.UpdateDocument:
-      return {
-        shared: false,
-        text: '',
-        ...state,
-        ...action.payload
-      };
+    case DocumentAction.SetDocument:
+      return action.payload.document;
 
     default:
       return state;

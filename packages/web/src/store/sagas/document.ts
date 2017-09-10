@@ -1,13 +1,15 @@
-import { Effect, takeEvery, call, put, all } from 'redux-saga/effects';
+import { Effect, takeEvery, call, put, all, select } from 'redux-saga/effects';
 
 import * as documentApi from '../api/doc-storage';
 import { randomString } from '../util';
 import { DocumentAction, ServerAction } from '../action';
+import { MkdDocument } from '../state';
+import { getDocument } from '../selectors';
 
 export default function* slugSaga(): Iterator<Effect> {
   yield all([
     takeEvery(DocumentAction.NewDocument, newDocument),
-    takeEvery(DocumentAction.UpdateDocument, saveDocument),
+    takeEvery(DocumentAction.UpdateDocument, updateDocument),
     takeEvery(DocumentAction.LoadDocument, loadDocument),
     takeEvery(DocumentAction.ShareDocument, shareDocument),
     takeEvery(DocumentAction.LoadAllDocuments, loadAllDocuments)
@@ -15,15 +17,32 @@ export default function* slugSaga(): Iterator<Effect> {
 }
 
 function* newDocument(action: DocumentAction.NewDocument): Iterator<Effect> {
-  const text = action.payload.text;
+  const text = action.payload.text || '';
   const slug = yield call(randomString);
+  const now = yield call(() => new Date());
 
-  yield put(DocumentAction.updateDocument(slug, text));
-  yield call(documentApi.storeDocument, { slug, text });
+  const doc: MkdDocument = {
+    slug,
+    text,
+    createdAt: now,
+    updatedAt: now
+  };
+
+  yield call(documentApi.storeDocument, doc);
+  yield put(DocumentAction.setDocument(doc));
 }
 
-function* saveDocument(action: DocumentAction.UpdateDocument): Iterator<Effect> {
-  yield call(documentApi.storeDocument, action.payload);
+function* updateDocument(action: DocumentAction.UpdateDocument): Iterator<Effect> {
+  const doc = yield select(getDocument);
+  const now = yield call(() => new Date());
+  const newDoc: MkdDocument = {
+    ...doc,
+    ...action.payload.document,
+    updatedAt: now
+  };
+
+  yield call(documentApi.storeDocument, newDoc);
+  yield put(DocumentAction.setDocument(newDoc));
 }
 
 function* loadDocument(action: DocumentAction.LoadDocument): Iterator<Effect> {

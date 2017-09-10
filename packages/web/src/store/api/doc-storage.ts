@@ -20,8 +20,13 @@ export function storeDocument(document: Partial<MkdDocument>) {
 
 export function restoreDocument(slug: Slug): MkdDocument {
   const docs = getDocs();
-  if (docs[slug]) {
-    return docs[slug];
+  const doc = docs[slug];
+  if (doc) {
+    return {
+      ...doc,
+      createdAt: new Date(doc.createdAt),
+      updatedAt: new Date(doc.updatedAt)
+    };
   } else {
     throw new Error();
   }
