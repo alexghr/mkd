@@ -1,7 +1,5 @@
 import { MkdDocument, MkdDocuments, Slug } from '../state';
 
-type Docs = Record<Slug, MkdDocument>;
-
 export function storeDocument(document: Partial<MkdDocument>) {
   if (!document.slug) {
     throw new Error();
@@ -22,18 +20,20 @@ export function restoreDocument(slug: Slug): MkdDocument {
   const docs = getDocs();
   const doc = docs[slug];
   if (doc) {
-    return {
-      ...doc,
-      createdAt: new Date(doc.createdAt),
-      updatedAt: new Date(doc.updatedAt)
-    };
+    return mapDocFromStorage(doc as SerializedMkdDocument);
   } else {
     throw new Error();
   }
 }
 
 export function restoreAllDocuments(): MkdDocuments {
-  return getDocs();
+  const docs = getDocs();
+  return Object.keys(docs)
+    .map(slug => mapDocFromStorage(docs[slug]))
+    .reduce((accum, doc) => {
+      accum[doc.slug] = doc;
+      return accum;
+    }, {})
 }
 
 export function ownsDocument(slug: Slug): boolean {
@@ -43,11 +43,22 @@ export function ownsDocument(slug: Slug): boolean {
 
 const docsKey = 'mkd.documents';
 
-function getDocs(): Docs {
+function getDocs(): SerializedMkdDocuments {
   const docsJson = localStorage.getItem(docsKey);
   return docsJson ? JSON.parse(docsJson) : {};
 }
 
-function storeDocs(docs: Docs): void {
+function storeDocs(docs: MkdDocuments | SerializedMkdDocuments): void {
   localStorage.setItem(docsKey, JSON.stringify(docs));
 }
+
+function mapDocFromStorage(doc: SerializedMkdDocument): MkdDocument {
+  return {
+    ...doc,
+    createdAt: new Date(doc.createdAt),
+    updatedAt: new Date(doc.updatedAt)
+  }
+}
+
+type SerializedMkdDocument = MkdDocument & { createdAt: string, updatedAt: string};
+type SerializedMkdDocuments = Record<string, SerializedMkdDocument>;

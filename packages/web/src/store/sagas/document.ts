@@ -24,6 +24,7 @@ function* newDocument(action: DocumentAction.NewDocument): Iterator<Effect> {
   const doc: MkdDocument = {
     slug,
     text,
+    title: 'Untitled document',
     createdAt: now,
     updatedAt: now
   };

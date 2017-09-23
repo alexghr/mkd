@@ -1,4 +1,4 @@
-import { Selector } from 'reselect';
+import { Selector, createSelector } from 'reselect';
 import { AppState, Slug } from './state';
 
 export const getSlug: Selector<AppState, Slug | null> =
@@ -15,3 +15,10 @@ export const getDocuments: Selector<AppState, AppState['documents']> =
 
 export const getConfig: Selector<AppState, AppState['config']> =
   (state) => state.config;
+
+export const getOrderedDocuments = createSelector(
+  getDocuments,
+  (documents) => Object.keys(documents)
+    .map(slug => documents[slug])
+    .sort((doc1, doc2) => doc2.updatedAt.getTime() - doc1.updatedAt.getTime())
+)

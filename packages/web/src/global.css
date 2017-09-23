@@ -1,6 +1,10 @@
 :root {
-  --page-text-color: hsl(0, 0%, 16%);
-  --page-background-color: hsl(0, 0%, 98%);
+
+  --default-text-color: hsl(0, 0%, 16%);
+  --alt-text-color: hsl(0, 0%, 64%);
+
+  --page-text-color: var(--default-text-color);
+  --page-background-color: hsl(0, 0%, 99%);
 }
 
 *,
