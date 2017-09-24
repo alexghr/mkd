@@ -63,6 +63,7 @@
 .mkd-edit-page-share-msg {
   font-size: 0.75rem;
   user-select: none;
+  display: inline-block;
 }
 
 .mkd-edit-page-share-link {
@@ -71,8 +72,47 @@
   padding: 0.15em 0.25em;
   border-radius: 0.25em;
   user-select: auto;
+  display: inline;
 }
 
 .mkd-edit-page-share-link:hover {
   cursor: copy;
+}
+
+.mkd-edit-page-share-info {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.mkd-edit-page-share-info-trigger {
+  --size: 0.9rem;
+
+  display: inline-block;
+  color: var(--page-text-color);
+  border: 1px solid var(--page-text-color);
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
+  font-size: 0.7rem;
+  text-align: center;
+  line-height: var(--size);
+  user-select: none;
+  cursor: default;
+}
+
+.mkd-edit-page-share-info-text {
+  visibility: hidden;
+  position: absolute;
+  margin-top: 0.5rem;
+  background-color: var(--page-background-color);
+  border: 1px solid var(--separator-border);
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 5px 0px var(--separator-border);
+  transition: all 200ms;
+  opacity: 0;
+}
+
+.mkd-edit-page-share-info-trigger:hover + .mkd-edit-page-share-info-text {
+  visibility: visible;
+  opacity: 1;
 }

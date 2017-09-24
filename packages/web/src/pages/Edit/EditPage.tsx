@@ -61,12 +61,25 @@ class EditPage extends React.Component<Props, State> {
     return (
       <div className="mkd-edit-page-share-container">
         {shared
-          ? <span className="mkd-edit-page-share-msg">
-              Share link
+          ? <div className="mkd-edit-page-share-msg">
+              <div className="mkd-edit-page-share-link">
+                Share link
                 <span className="mkd-edit-page-share-link" onClick={this.onShareLinkClickBound}>
                   {shareLink(slug)}
                 </span>
-            </span>
+              </div>
+              <div className="mkd-edit-page-share-info">
+                <span className="mkd-edit-page-share-info-trigger">i</span>
+                <div className="mkd-edit-page-share-info-text">
+                  <p>
+                    Share this link with your friend. They will be able to see what you write in real time.
+                  </p>
+                  <p>
+                    <strong>Note! This link will work only if both of you are connected to the same network</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
           : <button className="mkd-edit-page-share-btn" onClick={this.onShareBound}>
               Share
             </button>
