@@ -7,6 +7,9 @@
   --page-background-color: hsl(0, 0%, 99%);
 
   --separator-border: hsl(0, 0%, 80%);
+
+  --hover-background: hsl(0, 0%, 90%);
+
 }
 
 *,
@@ -87,4 +90,35 @@ h6 {
 
 p {
   margin: 0.5rem 0;
+}
+
+button {
+  line-height: 1;
+  background-color: #fff;
+  border: 1px solid var(--separator-border);
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  font-size: .75rem;
+}
+
+button:hover {
+  background-color: var(--hover-background);
+  cursor: pointer;
+}
+
+.mkd-page {
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+  height: 100%;
+}
+
+.mkd-page-content {
+  height: 100%;
+  overflow: auto;
+}
+
+.mkd-document-title {
+  line-height: 1;
+  vertical-align: middle;
 }

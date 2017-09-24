@@ -1,11 +1,14 @@
 .index-page {
+  overflow: hidden;
 }
 
 .index-page-new-doc-btn {
 }
 
 .index-page-document-list-block {
-  margin-top: 2rem;
+  margin: 2rem auto;
+  width: 80%;
+  overflow: auto;
 }
 
 .index-page-document-list {
@@ -13,8 +16,6 @@
   padding: 0;
   margin: 0;
   max-width: 35rem;
-  width: 80%;
-  margin: auto;
 }
 
 .index-page-document-list-item + .index-page-document-list-item {

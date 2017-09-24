@@ -5,7 +5,9 @@ import { AppState, Slug } from '../../store/state';
 import { ClientAction } from '../../store/action';
 import { getDocument } from '../../store/selectors';
 
-import DocumentViewer from '../../Mkd/DocumentViewer';
+// import DocumentViewer from '../../Mkd/DocumentViewer';
+import Viewer from '../../Mkd/Viewer';
+import PageHeader from '../../Mkd/PageHeader';
 
 import './SharePage.css';
 
@@ -18,9 +20,20 @@ class SharePage extends React.Component<Props, State> {
   render() {
     const { document } = this.props;
 
+    if (!document) {
+      return null;
+    }
+
     return (
-      <div className="mkd-share-page">
-        {document ? <DocumentViewer document={document}/> : 'Unknown document ' + this.props.slug}
+      <div className="mkd-page">
+        <PageHeader>
+          <span className="mkd-document-title">{document.title}</span>
+        </PageHeader>
+        <div className="mkd-page-content">
+          <div className="mkd-share-page-document-text">
+            <Viewer text={document.text}/>
+          </div>
+        </div>
       </div>
     );
   }

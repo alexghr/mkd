@@ -41,15 +41,17 @@ class IndexPage extends React.Component<Props, State> {
     }
 
     return (
-      <section className="index-page">
+      <section className="index-page mkd-page">
         <PageHeader>
           <button className="index-page-new-doc-btn" onClick={this.onNewDocBound}>
             New document
           </button>
         </PageHeader>
 
-        <div className="index-page-document-list-block">
-          {this.renderDocumentList()}
+        <div className="mkd-page-content">
+          <div className="index-page-document-list-block">
+            {this.renderDocumentList()}
+          </div>
         </div>
       </section>
     );
@@ -77,7 +79,7 @@ class IndexPage extends React.Component<Props, State> {
 
   renderDocumentItem(doc: MkdDocument): JSX.Element {
     return (
-      <Link to={`/edit/${doc.slug}`} className="index-page-document">
+      <Link to={`/view/${doc.slug}`} className="index-page-document">
         <div className="index-page-document-title">
           {doc.title}
         </div>

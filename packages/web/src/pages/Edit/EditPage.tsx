@@ -28,17 +28,17 @@ class EditPage extends React.Component<Props, State> {
     const title = document && document.title ? document.title : 'Untitled';
 
     return (
-      <section className="mkd-edit-page">
+      <section className="mkd-page mkd-edit-page">
         <PageHeader>
           <div className="mkd-edit-page-header">
             <div className="mkd-edit-page-title-container">
-              <span className="mkd-edit-page-title-dummy">{title}</span>
+              <span className="mkd-document-title mkd-edit-page-title-dummy">{title}</span>
               <input className="mkd-edit-page-title" onChange={this.onTitleChangeBound} value={title}/>
             </div>
             {this.renderShare(document)}
           </div>
         </PageHeader>
-        <div className="mkd-edit-page-content">
+        <div className="mkd-page-content mkd-edit-page-content">
           <div className="mkd-edit-page-editor">
             <MkdEditor text={text} onChange={this.onChangeBound}/>
           </div>
