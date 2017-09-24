@@ -100,7 +100,7 @@ class IndexPage extends React.Component<Props, State> {
     if (diffSec < 60) {
       return 'less than minute ago';
     } else if (diffMin < 60) {
-      return `${diffMin} ${pluralize(diffMin, 'minute')} ago`
+      return `${diffMin} ${pluralize(diffMin, 'minute')} ago`;
     } else if (diffHour < 24) {
       return `${diffHour} ${pluralize(diffHour, 'hour')} ago`;
     } else if (diffDays < 2) {

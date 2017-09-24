@@ -1,2 +1,2 @@
-export * from './ViewPage'
-export { default } from './ViewPage'
+export * from './ViewPage';
+export { default } from './ViewPage';

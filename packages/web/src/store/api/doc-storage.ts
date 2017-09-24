@@ -30,10 +30,13 @@ export function restoreAllDocuments(): MkdDocuments {
   const docs = getDocs();
   return Object.keys(docs)
     .map(slug => mapDocFromStorage(docs[slug]))
-    .reduce((accum, doc) => {
-      accum[doc.slug] = doc;
-      return accum;
-    }, {})
+    .reduce(
+      (accum, doc) => {
+        accum[doc.slug] = doc;
+        return accum;
+      },
+      {}
+    );
 }
 
 export function ownsDocument(slug: Slug): boolean {
@@ -57,7 +60,7 @@ function mapDocFromStorage(doc: SerializedMkdDocument): MkdDocument {
     ...doc,
     createdAt: new Date(doc.createdAt),
     updatedAt: new Date(doc.updatedAt)
-  }
+  };
 }
 
 type SerializedMkdDocument = MkdDocument & { createdAt: string, updatedAt: string};

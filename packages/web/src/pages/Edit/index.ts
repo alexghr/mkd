@@ -1,2 +1,2 @@
-export * from './EditPage'
-export { default } from './EditPage'
+export * from './EditPage';
+export { default } from './EditPage';

@@ -21,4 +21,4 @@ export const getOrderedDocuments = createSelector(
   (documents) => Object.keys(documents)
     .map(slug => documents[slug])
     .sort((doc1, doc2) => doc2.updatedAt.getTime() - doc1.updatedAt.getTime())
-)
+);

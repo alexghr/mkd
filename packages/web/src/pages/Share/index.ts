@@ -1,2 +1,2 @@
-export * from './SharePage'
-export { default } from './SharePage'
+export * from './SharePage';
+export { default } from './SharePage';

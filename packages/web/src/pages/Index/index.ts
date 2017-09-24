@@ -1,2 +1,2 @@
-export * from './IndexPage'
-export { default } from './IndexPage'
+export * from './IndexPage';
+export { default } from './IndexPage';

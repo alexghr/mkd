@@ -27,11 +27,11 @@ class ViewPage extends React.Component<Props, State> {
     const { document, slug } = this.props;
 
     if (this.state.redirectToEdit) {
-      return <Redirect to={`/edit/${slug}`}/>
+      return <Redirect to={`/edit/${slug}`}/>;
     }
 
     if (!document) {
-      return <span>Unknown</span>
+      return <span>Unknown</span>;
     }
 
     return (

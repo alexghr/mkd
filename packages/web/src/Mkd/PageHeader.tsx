@@ -11,7 +11,7 @@ const PageHeader = (props: React.Props<void>): JSX.Element => {
       </Link>
 
       <div className="mkd-page-header-content">
-        { props.children }
+        {props.children}
       </div>
     </header>
   );
