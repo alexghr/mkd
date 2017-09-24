@@ -6,6 +6,8 @@ import { AppState, Slug, MkdDocument } from '../../store/state';
 import { DocumentAction } from '../../store/action';
 import { getSlug, getOrderedDocuments } from '../../store/selectors';
 
+import PageHeader from '../../Mkd/PageHeader';
+
 import './IndexPage.css';
 
 class IndexPage extends React.Component<Props, State> {
@@ -39,16 +41,17 @@ class IndexPage extends React.Component<Props, State> {
     }
 
     return (
-      <div className="index-page">
-        <div className="index-page-new-doc-block">
+      <section className="index-page">
+        <PageHeader>
           <button className="index-page-new-doc-btn" onClick={this.onNewDocBound}>
             New document
           </button>
-        </div>
+        </PageHeader>
+
         <div className="index-page-document-list-block">
           {this.renderDocumentList()}
         </div>
-      </div>
+      </section>
     );
   }
 

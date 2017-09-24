@@ -1,6 +1,7 @@
 .index-page {
-  width: 80%;
-  margin: auto;
+}
+
+.index-page-new-doc-btn {
 }
 
 .index-page-document-list-block {
@@ -12,6 +13,8 @@
   padding: 0;
   margin: 0;
   max-width: 35rem;
+  width: 80%;
+  margin: auto;
 }
 
 .index-page-document-list-item + .index-page-document-list-item {

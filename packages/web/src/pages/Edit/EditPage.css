@@ -1,28 +1,15 @@
 .mkd-edit-page {
-
-  --header-background-color: hsl(0, 0%, 97%);
-  --header-box-shadow: hsl(0, 0%, 90%);
-
-  --separator-border: hsl(0, 0%, 80%);
-
   --v-spacing: 0.5rem;
   --h-spacing: 1rem;
 
-  display: flex;
-  flex-flow: column nowrap;
   height: 100%;
 }
 
 .mkd-edit-page-header {
   display: flex;
   flex-flow: row nowrap;
-  border-bottom: 1px solid var(--separator-border);
-  padding: var(--v-spacing) var(--h-spacing);
-
-  background-color: var(--header-background-color);
-  box-shadow: 0 5px 5px -2px var(--header-box-shadow);
-
   align-items: center;
+
 }
 
 .mkd-edit-page-title-container {
@@ -30,7 +17,7 @@
   position: relative;
   padding: 0 0.5rem 0 0;
   margin-right: 0.5rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .mkd-edit-page-title-dummy {

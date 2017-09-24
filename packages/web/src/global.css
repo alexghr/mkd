@@ -5,6 +5,8 @@
 
   --page-text-color: var(--default-text-color);
   --page-background-color: hsl(0, 0%, 99%);
+
+  --separator-border: hsl(0, 0%, 80%);
 }
 
 *,

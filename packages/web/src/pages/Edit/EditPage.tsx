@@ -7,6 +7,7 @@ import {  getDocument } from '../../store/selectors';
 
 import MkdEditor from '../../Mkd/Editor';
 import MkdViewer from '../../Mkd/Viewer';
+import PageHeader from '../../Mkd/PageHeader';
 
 import './EditPage.css';
 
@@ -28,13 +29,15 @@ class EditPage extends React.Component<Props, State> {
 
     return (
       <section className="mkd-edit-page">
-        <header className="mkd-edit-page-header">
-          <div className="mkd-edit-page-title-container">
-            <span className="mkd-edit-page-title-dummy">{title}</span>
-            <input className="mkd-edit-page-title" onChange={this.onTitleChangeBound} value={title}/>
+        <PageHeader>
+          <div className="mkd-edit-page-header">
+            <div className="mkd-edit-page-title-container">
+              <span className="mkd-edit-page-title-dummy">{title}</span>
+              <input className="mkd-edit-page-title" onChange={this.onTitleChangeBound} value={title}/>
+            </div>
+            {this.renderShare(document)}
           </div>
-          {this.renderShare(document)}
-        </header>
+        </PageHeader>
         <div className="mkd-edit-page-content">
           <div className="mkd-edit-page-editor">
             <MkdEditor text={text} onChange={this.onChangeBound}/>
