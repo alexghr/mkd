@@ -32,6 +32,6 @@
     "postbuild": "rm build/static/**/*.map build/config.dev.json build/asset-manifest.json build/service-worker.js",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "deploy": "aws s3 sync build ${WEB_BUCKET}"
+    "deploy": "aws s3 sync build/ $WEB_BUCKET"
   }
 }
