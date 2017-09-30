@@ -20,7 +20,6 @@ class SharePage extends React.Component<Props, State> {
     return (
       <div className="mkd-page">
         <PageHeader>
-          <span className="mkd-document-title">{document.title}</span>
         </PageHeader>
         <div className="mkd-page-content">
           <div className="mkd-share-page-document-text">
@@ -29,6 +28,15 @@ class SharePage extends React.Component<Props, State> {
         </div>
       </div>
     );
+  }
+
+  renderDocumentTitle(): JSX.Element | null {
+    const { document } = this.props;
+    if (document) {
+      return <span className="mkd-document-title">{document.title}</span>
+    } else {
+      return null;
+    }
   }
 
   renderDocument(): JSX.Element | null {

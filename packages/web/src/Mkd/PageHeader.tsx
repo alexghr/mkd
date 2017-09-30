@@ -7,7 +7,7 @@ const PageHeader = (props: React.Props<void>): JSX.Element => {
   return (
     <header className="mkd-page-header">
       <Link to="/" className="mkd-page-title">
-        Mkd
+        mkd
       </Link>
 
       <div className="mkd-page-header-content">
