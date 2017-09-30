@@ -1,5 +1,5 @@
 import { ActionCreator } from 'redux';
-import { Slug, Config, MkdDocument, MkdDocuments } from './state';
+import { Slug, Config, MkdDocument, MkdDocuments, ConnectionStatus } from './state';
 
 export type Action = ConfigActions | DocumentActions | ServerActions | ClientActions | AppActions;
 export default Action;
@@ -157,6 +157,7 @@ type ServerActions = ServerAction.ListenForClients | ServerAction.Close;
 
 export namespace ClientAction {
   export const InitServerConnection = 'ses.client.initiateConnection';
+  export const SetConnectionStatus = 'ses.client.setConnectionStatus';
   export const Close = 'ses.server.close';
 
   export type InitServerConnection = {
@@ -170,15 +171,27 @@ export namespace ClientAction {
     type: typeof Close
   };
 
+  export type SetConnectionStatus = {
+    type: typeof SetConnectionStatus,
+    payload: {
+      status: ConnectionStatus
+    }
+  }
+
   export const initServerConnection: ActionCreator<InitServerConnection> = (slug: Slug) => ({
     type: InitServerConnection,
     payload: { slug }
   });
 
   export const close: ActionCreator<Close> = () => ({ type: Close });
+
+  export const setConnectionStatus: ActionCreator<SetConnectionStatus> = (status: ConnectionStatus) => ({
+    type: SetConnectionStatus,
+    payload: { status }
+  });
 }
 
-type ClientActions = ClientAction.InitServerConnection | ClientAction.Close;
+type ClientActions = ClientAction.InitServerConnection | ClientAction.Close | ClientAction.SetConnectionStatus;
 
 export namespace AppAction {
   export const Init = 'app.init';

@@ -3,9 +3,8 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 
 import { AppState, Slug } from '../../store/state';
 import { ClientAction } from '../../store/action';
-import { getDocument } from '../../store/selectors';
+import { getDocument, getConnectionStatus } from '../../store/selectors';
 
-// import DocumentViewer from '../../Mkd/DocumentViewer';
 import Viewer from '../../Mkd/Viewer';
 import PageHeader from '../../Mkd/PageHeader';
 
@@ -18,12 +17,6 @@ class SharePage extends React.Component<Props, State> {
   }
 
   render() {
-    const { document } = this.props;
-
-    if (!document) {
-      return null;
-    }
-
     return (
       <div className="mkd-page">
         <PageHeader>
@@ -31,11 +24,24 @@ class SharePage extends React.Component<Props, State> {
         </PageHeader>
         <div className="mkd-page-content">
           <div className="mkd-share-page-document-text">
-            <Viewer text={document.text}/>
+            {this.renderDocument()}
           </div>
         </div>
       </div>
     );
+  }
+
+  renderDocument(): JSX.Element | null {
+    const { document, connectionStatus } = this.props;
+    if (connectionStatus === 'open' && document) {
+      return <Viewer text={document.text}/>
+    } else if (connectionStatus === 'connecting') {
+      return <div>Connecting...</div>;
+    } else if (connectionStatus === 'error') {
+      return <div>Couldn't connect to remote peer</div>
+    } else {
+      return null;
+    }
   }
 }
 
@@ -48,7 +54,8 @@ type OwnProps = {
 };
 
 type StateProps = {
-  document: AppState['document']
+  document: AppState['document'],
+  connectionStatus: AppState['connectionStatus']
 };
 
 type DispatchProps = {
@@ -56,7 +63,8 @@ type DispatchProps = {
 };
 
 const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
-  document: getDocument(state)
+  document: getDocument(state),
+  connectionStatus: getConnectionStatus(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (dispatch, props) => ({

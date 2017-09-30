@@ -1,7 +1,8 @@
 export type AppState = {
   documents: MkdDocuments,
   document: MkdDocument | null,
-  config: Config | null
+  config: Config | null,
+  connectionStatus: ConnectionStatus
 };
 
 export type Slug = string;
@@ -22,10 +23,13 @@ export type Config = {
   stunServers: Array<string>
 };
 
+export type ConnectionStatus = 'none' | 'open' | 'connecting' | 'error';
+
 export const initialState: AppState = {
   documents: {},
   document: null,
-  config: null
+  config: null,
+  connectionStatus: 'none'
 };
 
 export default AppState;

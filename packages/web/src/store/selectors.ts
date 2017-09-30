@@ -10,6 +10,9 @@ export const getText: Selector<AppState, string> =
 export const getDocument: Selector<AppState, AppState['document']> =
   (state) => state.document;
 
+export const getConnectionStatus: Selector<AppState, AppState['connectionStatus']> =
+  (state) => state.connectionStatus;
+
 export const getDocuments: Selector<AppState, AppState['documents']> =
   (state) => state.documents;
 
@@ -20,5 +23,11 @@ export const getOrderedDocuments = createSelector(
   getDocuments,
   (documents) => Object.keys(documents)
     .map(slug => documents[slug])
-    .sort((doc1, doc2) => doc2.updatedAt.getTime() - doc1.updatedAt.getTime())
+    .sort((doc1, doc2) => {
+      if (!doc2.updatedAt || !doc1.updatedAt) {
+        return 0;
+      }
+
+      return doc2.updatedAt.getTime() - doc1.updatedAt.getTime()
+    })
 );
