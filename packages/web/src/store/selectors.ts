@@ -28,6 +28,6 @@ export const getOrderedDocuments = createSelector(
         return 0;
       }
 
-      return doc2.updatedAt.getTime() - doc1.updatedAt.getTime()
+      return doc2.updatedAt.getTime() - doc1.updatedAt.getTime();
     })
 );

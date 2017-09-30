@@ -127,7 +127,7 @@ function* awaitDataChannelOrDie(rtcConn: RTCPeerConnection): Iterator<Effect> {
     const val = yield join(task);
     return val;
   } catch (e) {
-    yield cancel(task)
+    yield cancel(task);
     return null;
   }
 }
@@ -150,7 +150,7 @@ function waitForConnectionEstablised(rtcConn: RTCPeerConnection): Promise<void> 
         }
       };
 
-      rtcConn.addEventListener('iceconnectionstatechange', fn)
+      rtcConn.addEventListener('iceconnectionstatechange', fn);
     });
   }
 }

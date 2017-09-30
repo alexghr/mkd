@@ -34,11 +34,11 @@ class SharePage extends React.Component<Props, State> {
   renderDocument(): JSX.Element | null {
     const { document, connectionStatus } = this.props;
     if (connectionStatus === 'open' && document) {
-      return <Viewer text={document.text}/>
+      return <Viewer text={document.text}/>;
     } else if (connectionStatus === 'connecting') {
       return <div>Connecting...</div>;
     } else if (connectionStatus === 'error') {
-      return <div>Couldn't connect to remote peer</div>
+      return <div>Couldn't connect to remote peer</div>;
     } else {
       return null;
     }

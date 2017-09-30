@@ -176,7 +176,7 @@ export namespace ClientAction {
     payload: {
       status: ConnectionStatus
     }
-  }
+  };
 
   export const initServerConnection: ActionCreator<InitServerConnection> = (slug: Slug) => ({
     type: InitServerConnection,
