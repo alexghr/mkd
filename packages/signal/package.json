@@ -1,8 +1,9 @@
 {
   "name": "@mkd/signal",
   "version": "0.1.0",
+  "license": "SEE LICENSE IN ../../LICENSE",
   "private": true,
-  "description": "",
+  "author": "Alex Gherghisan <alex@alexghr.me>",
   "main": "lib",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,9 +11,6 @@
     "prebuild": "mkdir -p build",
     "build": "zip -r build/mkd-signal.zip package.json package-lock.json lib/"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "bunyan": "^1.8.12",
     "dotenv": "^4.0.0",

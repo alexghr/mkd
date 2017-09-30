@@ -1,7 +1,9 @@
 {
   "name": "@mkd/web",
   "version": "0.1.0",
+  "license": "SEE LICENSE IN ../../LICENSE",
   "private": true,
+  "author": "Alex Gherghisan <alex@alexghr.me>",
   "dependencies": {
     "marked": "^0.3.6",
     "react": "^15.6.1",
