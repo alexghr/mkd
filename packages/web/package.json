@@ -29,8 +29,9 @@
   "scripts": {
     "postinstall": "cp --no-clobber public/config.sample.json public/config.json || true",
     "start": "react-scripts-ts start",
+    "prebuild": "rm -rf build/",
     "build": "react-scripts-ts build",
-    "postbuild": "rm -f build/static/**/*.map build/config.json build/config.sample.json build/asset-manifest.json build/service-worker.js",
+    "postbuild": "rm -f build/static/**/*.map build/config.json build/config.sample.json build/service-worker.js",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "deploy": "aws s3 sync build/ $WEB_BUCKET"
