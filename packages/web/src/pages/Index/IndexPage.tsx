@@ -37,7 +37,7 @@ class IndexPage extends React.Component<Props, State> {
     const { slug } = this.props;
 
     if (redirect && slug) {
-      return (<Redirect push={true} to={`/edit/${slug}`}/>);
+      return (<Redirect push={true} to={`/edit/${slug}`} />);
     }
 
     return (
@@ -68,7 +68,7 @@ class IndexPage extends React.Component<Props, State> {
 
     return (
       <ol className="index-page-document-list">
-        { documents.map(d => (
+        {documents.map(d => (
           <li className="index-page-document-list-item" key={d.slug}>
             {this.renderDocumentItem(d)}
           </li>
@@ -138,7 +138,7 @@ type DispatchProps = {
   newDocument: () => void,
 };
 
-const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (state) => ({
   slug: getSlug(state),
   documents: getOrderedDocuments(state)
 });

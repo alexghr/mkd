@@ -3,7 +3,7 @@ import { connect, MapStateToProps, MapDispatchToProps } from 'react-redux';
 
 import { AppState, Slug, MkdDocument } from '../../store/state';
 import { DocumentAction } from '../../store/action';
-import {  getDocument } from '../../store/selectors';
+import { getDocument } from '../../store/selectors';
 
 import MkdEditor from '../../Mkd/Editor';
 import MkdViewer from '../../Mkd/Viewer';
@@ -33,18 +33,18 @@ class EditPage extends React.Component<Props, State> {
           <div className="mkd-edit-page-header">
             <div className="mkd-edit-page-title-container">
               <span className="mkd-document-title mkd-edit-page-title-dummy">{title}</span>
-              <input className="mkd-edit-page-title" onChange={this.onTitleChangeBound} value={title}/>
+              <input className="mkd-edit-page-title" onChange={this.onTitleChangeBound} value={title} />
             </div>
             {this.renderShare(document)}
           </div>
         </PageHeader>
         <div className="mkd-page-content mkd-edit-page-content">
           <div className="mkd-edit-page-editor">
-            <MkdEditor text={text} onChange={this.onChangeBound}/>
+            <MkdEditor text={text} onChange={this.onChangeBound} />
           </div>
-          <div className="mkd-edit-page-separator"/>
+          <div className="mkd-edit-page-separator" />
           <div className="mkd-edit-page-renderer">
-            <MkdViewer text={text}/>
+            <MkdViewer text={text} />
           </div>
         </div>
       </section>
@@ -62,26 +62,26 @@ class EditPage extends React.Component<Props, State> {
       <div className="mkd-edit-page-share-container">
         {shared
           ? <div className="mkd-edit-page-share-msg">
-              <div className="mkd-edit-page-share-link">
-                Share link
+            <div className="mkd-edit-page-share-link">
+              Share link
                 <span className="mkd-edit-page-share-link" onClick={this.onShareLinkClickBound}>
-                  {shareLink(slug)}
-                </span>
-              </div>
-              <div className="mkd-edit-page-share-info">
-                <span className="mkd-edit-page-share-info-trigger">i</span>
-                <div className="mkd-edit-page-share-info-text">
-                  <p>
-                    Share this link with your friend. They will be able to see what you write in real time.
+                {shareLink(slug)}
+              </span>
+            </div>
+            <div className="mkd-edit-page-share-info">
+              <span className="mkd-edit-page-share-info-trigger">i</span>
+              <div className="mkd-edit-page-share-info-text">
+                <p>
+                  Share this link with your friend. They will be able to see what you write in real time.
                   </p>
-                  <p>
-                    <strong>Note! This link will work only if both of you are connected to the same network</strong>
-                  </p>
-                </div>
+                <p>
+                  <strong>Note! This link will work only if both of you are connected to the same network</strong>
+                </p>
               </div>
             </div>
+          </div>
           : <button className="mkd-edit-page-share-btn" onClick={this.onShareBound}>
-              Share
+            Share
             </button>
         }
       </div>
@@ -97,7 +97,10 @@ class EditPage extends React.Component<Props, State> {
   }
 
   onShareLinkClick(evt: React.MouseEvent<HTMLSpanElement>): void {
-    getSelection().selectAllChildren(evt.currentTarget);
+    const selection = getSelection();
+    if (selection) {
+      selection.selectAllChildren(evt.currentTarget);
+    }
   }
 
   onTitleChange(evt: React.ChangeEvent<HTMLInputElement>): void {
@@ -128,7 +131,7 @@ type DispatchProps = {
   share: () => void,
 };
 
-const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (state) => ({
   document: getDocument(state)
 });
 

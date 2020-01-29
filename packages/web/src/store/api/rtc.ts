@@ -28,7 +28,9 @@ export function makeOffer(rtcConn: RTCPeerConnection): Promise<RTCSessionDescrip
     .then(() => rtcConn.localDescription!);
 }
 
-export function makeAnswer(rtcConn: RTCPeerConnection, offer: RTCSessionDescription): Promise<RTCSessionDescription> {
+export function makeAnswer(
+  rtcConn: RTCPeerConnection, offer: RTCSessionDescriptionInit
+): Promise<RTCSessionDescription> {
   return rtcConn.setRemoteDescription(offer)
     .then(() => rtcConn.createAnswer())
     .then(answer => rtcConn.setLocalDescription(answer))

@@ -1,0 +1,23 @@
+{
+  "name": "mkd",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:alexghr/mkd.git",
+  "author": "Alex Gherghisan <alexghr@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "./packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "start": "lerna run --parallel start"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  },
+  "resolutions": {
+    "@types/react": "^15.0.0",
+    "@types/react-router": "^4.0.0"
+  }
+}

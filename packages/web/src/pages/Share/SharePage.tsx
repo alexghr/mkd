@@ -19,8 +19,7 @@ class SharePage extends React.Component<Props, State> {
   render() {
     return (
       <div className="mkd-page">
-        <PageHeader>
-        </PageHeader>
+        <PageHeader />
         <div className="mkd-page-content">
           <div className="mkd-share-page-document-text">
             {this.renderDocument()}
@@ -33,7 +32,7 @@ class SharePage extends React.Component<Props, State> {
   renderDocumentTitle(): JSX.Element | null {
     const { document } = this.props;
     if (document) {
-      return <span className="mkd-document-title">{document.title}</span>
+      return <span className="mkd-document-title">{document.title}</span>;
     } else {
       return null;
     }
@@ -42,7 +41,7 @@ class SharePage extends React.Component<Props, State> {
   renderDocument(): JSX.Element | null {
     const { document, connectionStatus } = this.props;
     if (connectionStatus === 'open' && document) {
-      return <Viewer text={document.text}/>;
+      return <Viewer text={document.text} />;
     } else if (connectionStatus === 'connecting') {
       return <div>Connecting...</div>;
     } else if (connectionStatus === 'error') {
@@ -70,7 +69,7 @@ type DispatchProps = {
   announce: () => void
 };
 
-const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (state) => ({
   document: getDocument(state),
   connectionStatus: getConnectionStatus(state)
 });

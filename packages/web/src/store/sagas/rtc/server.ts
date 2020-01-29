@@ -54,9 +54,9 @@ function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): I
   const offer = yield call(rtcApi.makeOffer, rtcConn);
 
   yield call([signal, signal.broadcast], slug, {
-      type: OfferSignalEvent,
-      offer,
-      clientId
+    type: OfferSignalEvent,
+    offer,
+    clientId
   });
 
   const answerEvent: AnswerSignalEvent = yield take(answerChannel);
@@ -66,7 +66,7 @@ function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): I
 
   yield join(
     yield fork(rtcApi.awaitDataChannelOpen, dataChannel),
-    yield fork([rtcConn, rtcConn.setRemoteDescription], answerEvent.answer as RTCSessionDescription)
+    yield fork([rtcConn, rtcConn.setRemoteDescription], answerEvent.answer)
   );
 
   yield call(sendInitialDocument, dataChannel);

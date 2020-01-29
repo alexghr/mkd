@@ -27,7 +27,7 @@ class ViewPage extends React.Component<Props, State> {
     const { document, slug } = this.props;
 
     if (this.state.redirectToEdit) {
-      return <Redirect to={`/edit/${slug}`}/>;
+      return <Redirect to={`/edit/${slug}`} />;
     }
 
     if (!document) {
@@ -44,7 +44,7 @@ class ViewPage extends React.Component<Props, State> {
         </PageHeader>
         <div className="mkd-page-content">
           <div className="mkd-view-page-document">
-            <MkdViewer text={document.text}/>
+            <MkdViewer text={document.text} />
           </div>
         </div>
       </section>
@@ -74,7 +74,7 @@ type DispatchProps = {
   loadDocument: (slug: Slug) => void
 };
 
-const mapStateToProps: MapStateToProps<StateProps, OwnProps> = (state: AppState, ownProps) => ({
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (state) => ({
   document: getDocument(state)
 });
 

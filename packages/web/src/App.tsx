@@ -29,7 +29,7 @@ class App extends React.Component<Props, object> {
     }
 
     return (
-      <Router/>
+      <Router />
     );
   }
 
@@ -51,8 +51,8 @@ type DispatchProps = {
   close: () => void
 };
 
-const stateToProps: MapStateToProps<StateProps, OwnProps> =
-  (state: AppState, props) => ({
+const stateToProps: MapStateToProps<StateProps, OwnProps, AppState> =
+  (state) => ({
     config: getConfig(state)
   });
 

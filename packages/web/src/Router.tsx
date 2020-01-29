@@ -9,25 +9,12 @@ import SharePage from './pages/Share';
 
 import { Slug } from './store/state';
 
-export default () => {
-  return (
-    <Router>
-      <div>
-        <Route exact={true} path="/" component={IndexPage}/>
-        <Route path="/edit/:slug" component={renderEditPage}/>
-        <Route path="/view/:slug" render={renderViewPage}/>
-        <Route path="/share/:slug" render={renderSharePage}/>
-      </div>
-    </Router>
-  );
-};
-
 const renderPage = (
   component: React.ComponentClass<SlugParam>,
   params: RouteComponentProps<SlugParam>
 ): JSX.Element => React.createElement(component, {
-    slug: params.match.params.slug
-  });
+  slug: params.match.params.slug
+});
 
 const renderEditPage = renderPage.bind(null, EditPage);
 const renderViewPage = renderPage.bind(null, ViewPage);
@@ -35,4 +22,17 @@ const renderSharePage = renderPage.bind(null, SharePage);
 
 type SlugParam = {
   slug: Slug
+};
+
+export default () => {
+  return (
+    <Router>
+      <div>
+        <Route exact={true} path="/" component={IndexPage} />
+        <Route path="/edit/:slug" component={renderEditPage} />
+        <Route path="/view/:slug" render={renderViewPage} />
+        <Route path="/share/:slug" render={renderSharePage} />
+      </div>
+    </Router>
+  );
 };
