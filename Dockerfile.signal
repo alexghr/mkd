@@ -1,0 +1,18 @@
+FROM node:alpine
+
+ENV NODE_ENV production
+WORKDIR /signal
+
+COPY ./package.json yarn.lock lerna.json ./
+COPY ./packages/signal ./packages/signal
+
+# Install deps first
+# We do this first in order for Docker to cache and reuse this step if package.json/yarn.lock don't change
+RUN yarn install && ls -la ./packages && ls -la ./packages/signal
+
+ENV PORT=8081
+ENV ORIGIN=https://mkd.alexghr.me
+
+EXPOSE $PORT
+
+CMD ["node", "./packages/signal/lib"]
