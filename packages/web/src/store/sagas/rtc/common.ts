@@ -7,7 +7,7 @@ import { ClientId, SignalEventSource, CandidateSignalEvent, isCandidateSignalEve
 
 export function* shareIceCandidates(
   rtcConn: RTCPeerConnection, clientId: ClientId, signal: Signal, slug: Slug, source: SignalEventSource
-): Iterator<Effect> {
+) {
   const channel: Channel<RTCIceCandidate> = yield call(createRtcIceCandidateChannel, rtcConn);
 
   while (true) {
@@ -23,7 +23,7 @@ export function* shareIceCandidates(
 
 export function* handleIceCandidates(
   rtcConn: RTCPeerConnection, clientId: ClientId, signal: Signal, slug: Slug, source: SignalEventSource
-): Iterator<Effect> {
+) {
   const channel: Channel<RTCIceCandidate> = yield call(
     createCandidateSignalEventChannel, signal, slug, clientId, source
   );
@@ -34,8 +34,8 @@ export function* handleIceCandidates(
   }
 }
 
-function createRtcIceCandidateChannel(rtcConn: RTCPeerConnection): Channel<RTCIceCandidate> {
-  return eventChannel(emitter => {
+function createRtcIceCandidateChannel(rtcConn: RTCPeerConnection) {
+  return eventChannel<RTCIceCandidate>(emitter => {
     const fun = (evt: RTCPeerConnectionIceEvent) => {
       if (evt.candidate) {
         emitter(evt.candidate);
@@ -50,8 +50,8 @@ function createRtcIceCandidateChannel(rtcConn: RTCPeerConnection): Channel<RTCIc
 
 function createCandidateSignalEventChannel(
   signal: Signal, slug: Slug, clientId: ClientId, source: SignalEventSource
-): Channel<RTCIceCandidate> {
-  return eventChannel(emitter => signal.listenForMessages(slug, (evt: object) => {
+) {
+  return eventChannel<RTCIceCandidate>(emitter => signal.listenForMessages(slug, (evt: object) => {
     if (isCandidateSignalEvent(evt) && evt.clientId === clientId && evt.source === source) {
       const candidate = new RTCIceCandidate(evt.candidate);
       emitter(candidate);

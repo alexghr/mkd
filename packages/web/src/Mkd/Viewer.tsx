@@ -1,14 +1,14 @@
 import * as React from 'react';
-import * as marked from 'marked';
+import { parse } from 'marked';
 
 const Viewer = (props: Props) => {
   const { text } = props;
-  const html = marked(text);
+  const html = parse(text);
 
   return (
     <article
       className="mkd-viewer-content"
-      dangerouslySetInnerHTML={{__html: html}}
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 };

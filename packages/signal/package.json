@@ -7,13 +7,11 @@
   "main": "lib",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node lib",
-    "prebuild": "mkdir -p build",
-    "build": "zip -r build/mkd-signal.zip package.json package-lock.json lib/"
+    "start": "node lib"
   },
   "dependencies": {
     "bunyan": "^1.8.12",
-    "dotenv": "^4.0.0",
+    "dotenv": "^8.2.0",
     "signalhub": "github:alexghr/signalhub"
   }
 }

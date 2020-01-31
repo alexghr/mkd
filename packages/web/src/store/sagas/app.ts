@@ -1,4 +1,4 @@
-import { Effect, all, put, takeEvery } from 'redux-saga/effects';
+import { Effect, all, put, putResolve, takeEvery } from 'redux-saga/effects';
 
 import { AppAction, ConfigAction, DocumentAction, ServerAction, ClientAction } from '../action';
 
@@ -10,7 +10,7 @@ export default function* appSaga(): Iterator<Effect> {
 }
 
 function* init(): Iterator<Effect> {
-  yield put.resolve(ConfigAction.loadConfig());
+  yield putResolve(ConfigAction.loadConfig());
   yield put(DocumentAction.loadAllDocuments());
 }
 

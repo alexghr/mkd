@@ -1,0 +1,38 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "loose": true,
+        // Exclude transforms that make all code slower
+        "exclude": [
+          "transform-typeof-symbol"
+        ]
+      }
+    ],
+    [
+      "@babel/preset-typescript",
+      {
+        "allowNamespaces": true
+      }
+    ],
+    [
+      "@babel/preset-react",
+      {
+        "useBuiltIns": true
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-transform-modules-commonjs",
+    "@babel/plugin-proposal-class-properties",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": false,
+        "helpers": true,
+        "regenerator": true
+      }
+    ]
+  ]
+}

@@ -1,4 +1,4 @@
-import * as signalhub from 'signalhub';
+import signalhub from 'signalhub';
 import { Slug } from '../state';
 
 export default class Signal {
@@ -6,7 +6,7 @@ export default class Signal {
   private _hubConn: signalhub.SignalHub | null = null;
   private _subMap: Map<string, signalhub.EventListener> = new Map();
 
-  constructor(private signalUrl: string) {}
+  constructor(private signalUrl: string) { }
 
   listenForMessages(slug: Slug, cb: (evt: object) => void) {
     if (!this._subMap.has(slug)) {

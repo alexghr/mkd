@@ -1,9 +1,9 @@
 {
+  "extends": "@alexghr/ts",
   "compilerOptions": {
     "outDir": "build/dist",
     "module": "commonjs",
-    "target": "es5",
-    "lib": ["es6", "dom"],
+    "target": "es6",
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -15,19 +15,12 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "incremental": false,
+    "composite": false,
+    "types": []
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "node_modules/@types/webrtc/MediaStream.d.ts"
-  ],
-  "types": [
-    "typePatches"
+  "include": [
+    "./src/**/*"
   ]
 }

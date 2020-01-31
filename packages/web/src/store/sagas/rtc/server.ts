@@ -16,13 +16,13 @@ import {
 
 import { shareIceCandidates, handleIceCandidates } from './common';
 
-export default function* serverSaga(): Iterator<Effect> {
+export default function* serverSaga() {
   yield all([
     takeEvery(ServerAction.ListenForClients, listenForClients),
   ]);
 }
 
-function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effect> {
+function* listenForClients(action: ServerAction.ListenForClients) {
   const { slug } = action.payload;
 
   const config: Config = yield select(getConfig);
@@ -33,7 +33,7 @@ function* listenForClients(action: ServerAction.ListenForClients): Iterator<Effe
   yield takeEvery(ServerAction.Close, () => signal.close());
 }
 
-function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): Iterator<Effect | Array<Effect>> {
+function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent) {
   const { clientId } = evt;
 
   const config: Config = yield select(getConfig);
@@ -73,7 +73,7 @@ function* connectToClient(signal: Signal, slug: Slug, evt: ClientSignalEvent): I
   yield takeEvery(DocumentAction.UpdateDocument, updateClient, dataChannel);
 }
 
-function* sendInitialDocument(dataChannel: RTCDataChannel): Iterator<Effect> {
+function* sendInitialDocument(dataChannel: RTCDataChannel) {
   if (dataChannel.readyState !== 'open') {
     return;
   }
@@ -87,7 +87,7 @@ function* sendInitialDocument(dataChannel: RTCDataChannel): Iterator<Effect> {
 
 function* updateClient(
   dataChannel: RTCDataChannel, action: DocumentAction.UpdateDocument
-): Iterator<Effect> {
+) {
   if (dataChannel.readyState === 'open') {
     const currentDocument = yield select(getDocument);
 
@@ -100,16 +100,16 @@ function* updateClient(
   }
 }
 
-function createClientChannel(signal: Signal, slug: Slug): Channel<ClientSignalEvent> {
-  return eventChannel(emitter => signal.listenForMessages(slug, evt => {
+function createClientChannel(signal: Signal, slug: Slug) {
+  return eventChannel<ClientSignalEvent>(emitter => signal.listenForMessages(slug, evt => {
     if (isClientSignalEvent(evt)) {
       emitter(evt);
     }
   }));
 }
 
-function createRtcAnswerChannel(signal: Signal, slug: Slug, clientId: string): Channel<AnswerSignalEvent> {
-  return eventChannel(emitter => signal.listenForMessages(slug, evt => {
+function createRtcAnswerChannel(signal: Signal, slug: Slug, clientId: string) {
+  return eventChannel<AnswerSignalEvent>(emitter => signal.listenForMessages(slug, evt => {
     if (isAnswerSignalEvent(evt) && evt.clientId === clientId) {
       emitter(evt);
       emitter(END);

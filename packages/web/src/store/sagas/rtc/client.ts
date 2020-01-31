@@ -1,5 +1,5 @@
-import { Effect, takeEvery, cancel, take, put, call, join, fork, all, select, race } from 'redux-saga/effects';
-import { Channel, eventChannel, delay, END } from 'redux-saga';
+import { Effect, takeEvery, cancel, take, put, call, join, fork, all, select, race, delay } from 'redux-saga/effects';
+import { Channel, eventChannel, END } from 'redux-saga';
 
 import { Slug, Config } from '../../state';
 import { getConfig } from '../../selectors';
@@ -17,13 +17,13 @@ import {
 
 import { shareIceCandidates, handleIceCandidates } from './common';
 
-export default function* clientSaga(): Iterator<Effect> {
+export default function* clientSaga() {
   yield all([
     takeEvery(ClientAction.InitServerConnection, initiateConnection)
   ]);
 }
 
-function* initiateConnection(action: ClientAction.InitServerConnection): Iterator<Effect> {
+function* initiateConnection(action: ClientAction.InitServerConnection) {
   yield put(ClientAction.setConnectionStatus('connecting'));
 
   const { slug } = action.payload;
@@ -41,7 +41,7 @@ function* initiateConnection(action: ClientAction.InitServerConnection): Iterato
 
   const { offer, timeout } = yield race({
     offer: take(channel),
-    timeout: call(delay, 5000, true)
+    timeout: delay(5000, true)
   });
 
   if (timeout || !offer) {
@@ -55,7 +55,7 @@ function* initiateConnection(action: ClientAction.InitServerConnection): Iterato
 
 function* connectToServer(
   signal: Signal, slug: Slug, clientId: ClientId, event: OfferSignalEvent
-): Iterator<Effect | Array<Effect>> {
+) {
   const config = yield select(getConfig);
   const rtcConn: RTCPeerConnection = yield call(rtcApi.createRTCConnection, config.stunServers);
 
@@ -65,10 +65,10 @@ function* connectToServer(
     }
   });
 
+  const answer = yield call(rtcApi.makeAnswer, rtcConn, event.offer);
+
   yield fork(handleIceCandidates, rtcConn, clientId, signal, slug, 'server');
   yield fork(shareIceCandidates, rtcConn, clientId, signal, slug, 'client');
-
-  const answer = yield call(rtcApi.makeAnswer, rtcConn, event.offer);
 
   const results = yield join(
     yield fork([signal, signal.broadcast], slug, {
@@ -97,11 +97,11 @@ function* connectToServer(
   }
 }
 
-function* updateDocument(event: DocumentUpdateEvent): Iterator<Effect> {
+function* updateDocument(event: DocumentUpdateEvent) {
   yield put(DocumentAction.updateDocument(event.document.slug, event.document));
 }
 
-function createRtcOfferChannel(signal: Signal, slug: Slug, clientId: string): Channel<OfferSignalEvent> {
+function createRtcOfferChannel(signal: Signal, slug: Slug, clientId: string) {
   return eventChannel(emitter => signal.listenForMessages(slug, evt => {
     if (isOfferSignalEvent(evt) && evt.clientId === clientId) {
       emitter(evt);
@@ -110,7 +110,7 @@ function createRtcOfferChannel(signal: Signal, slug: Slug, clientId: string): Ch
   }));
 }
 
-function createMessageChannel(dataChannel: RTCDataChannel): Channel<DocumentUpdateEvent> {
+function createMessageChannel(dataChannel: RTCDataChannel) {
   return eventChannel(emitter => {
     const handler = (evt: MessageEvent) => emitter(JSON.parse(evt.data));
     dataChannel.addEventListener('message', handler);
@@ -119,7 +119,7 @@ function createMessageChannel(dataChannel: RTCDataChannel): Channel<DocumentUpda
   });
 }
 
-function* awaitDataChannelOrDie(rtcConn: RTCPeerConnection): Iterator<Effect> {
+function* awaitDataChannelOrDie(rtcConn: RTCPeerConnection) {
   const task = yield fork(rtcApi.awaitDataChannel, rtcConn);
 
   try {

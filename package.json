@@ -16,8 +16,8 @@
   "devDependencies": {
     "lerna": "^3.20.2"
   },
-  "resolutions": {
-    "@types/react": "^15.0.0",
-    "@types/react-router": "^4.0.0"
+  "dependencies": {
+    "@types/react": "^16.9.19",
+    "@types/react-router": "^5.1.4"
   }
 }
